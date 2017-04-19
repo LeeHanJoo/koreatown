@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:panel="http://schemas.android.com/apk/src/org.panel"
+    >
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -20,57 +22,106 @@
                 android:background="?attr/colorPrimary"
                 app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
+
+           <!-- <kr.nt.koreatown.view.MultiDirectionSlidingDrawer
+                xmlns:my="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/drawer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                my:direction="topToBottom"
+                my:handle="@+id/handle"
+                my:content="@+id/content">
+
+                <include
+                    android:id="@+id/content"
+                    layout="@layout/pen_content" />
+
+                <ImageView
+                    android:id="@+id/handle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dip"
+                    android:src="@drawable/btn_holder" />
+
+            </kr.nt.koreatown.view.MultiDirectionSlidingDrawer>-->
         </android.support.design.widget.AppBarLayout>
 
-        <LinearLayout
+        <RelativeLayout
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            tools:showIn="@layout/mainact">
+            tools:showIn="@layout/mainact"
+            android:orientation="vertical">
+
             <fragment
                 android:id="@+id/map"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 class="com.google.android.gms.maps.SupportMapFragment" />
 
-        </LinearLayout>
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" >
-
-            <FrameLayout
-                android:id="@+id/fl_activity_main_container"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="wrap_content">
 
-           <!-- <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
 
-                <ImageView
-                    android:id="@+id/progress_wheel"
-                    android:visibility="gone"
-                    android:layout_centerInParent="true"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/click_detail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="100dip"
+                        android:background="#000000"/>
+
+                </LinearLayout>
+                <kr.nt.koreatown.view.MultiDirectionSlidingDrawer
+                    xmlns:my="http://schemas.android.com/apk/res-auto"
+                    android:layout_below="@id/click_detail"
+                    android:id="@+id/drawer"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/loading"/>
+                    my:direction="topToBottom"
+                    my:handle="@+id/handle"
+                    my:content="@+id/content">
+                    <include
+                        android:id="@+id/content"
+                        layout="@layout/pen_content" />
+
+                    <ImageView
+                        android:id="@+id/handle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/btn_holder" />
+                </kr.nt.koreatown.view.MultiDirectionSlidingDrawer>
+
+            </RelativeLayout>
 
 
-            </RelativeLayout>-->
+     </RelativeLayout>
 
-        </FrameLayout>
+   <!--  <FrameLayout
+         android:layout_width="match_parent"
+         android:layout_height="match_parent" >
 
-        <android.support.design.widget.FloatingActionButton
+         <FrameLayout
+             android:id="@+id/fl_activity_main_container"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent" />
+
+
+
+     </FrameLayout>-->
+
+    <!--    <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/fab_margin"
             app:layout_anchor="@id/app_bar"
             app:layout_anchorGravity="bottom|end"
-            app:srcCompat="@android:drawable/ic_dialog_email" />
+            app:srcCompat="@android:drawable/ic_dialog_email" />-->
 
     </android.support.design.widget.CoordinatorLayout>
 </layout>
