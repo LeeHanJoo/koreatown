@@ -17,9 +17,12 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyC-IApppvW4w5nU6zA1wFuDlVIl7kcJITM" />
+            android:value="@string/googlemap_apikey" />
 
-        <activity android:name="kr.nt.koreatown.MainActivity">
+
+
+        <activity android:name="kr.nt.koreatown.main.MainAct"
+            android:theme="@style/AppTheme.NoActionBar">
            <!-- <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,7 +30,7 @@
             </intent-filter>-->
         </activity>
 
-        <activity android:name="kr.nt.koreatown.main.MainAct"
+        <activity android:name=".SplashActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

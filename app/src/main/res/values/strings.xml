@@ -3,4 +3,8 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="splash_gps_d2_msg">위치서비스를 켜주세요.</string>
+    <string name="splash_gps_d2_title">위치서비스 ON</string>
+    <string name="googlemap_apikey">AIzaSyC-IApppvW4w5nU6zA1wFuDlVIl7kcJITM</string>
 </resources>
