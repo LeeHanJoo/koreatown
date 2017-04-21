@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="bottom"
+        android:background="#333333"
+        android:orientation="vertical"
+        android:padding="10dip">
+
+        <TextView
+            android:id="@+id/detail_desc"
+            style="@style/BaseTextView"
+            android:text="안녕하세요? 방을 좀 구하고 싶은데요.. 한 6개월 동안 머물수 있는 곳이면 좋을것 같습니다. 전화번호는 231-222-2222 입니다."
+            android:textSize="15sp" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="150dip"
+            android:layout_marginTop="20dip" />
+
+        <TextView
+            style="@style/BaseTextView"
+            android:text="-금액 : $800 (Mon)" />
+
+        <TextView
+            style="@style/BaseTextView"
+            android:text="-방 : 1개" />
+
+        <TextView
+            style="@style/BaseTextView"
+            android:text="-침대 : 2개" />
+
+        <TextView
+            style="@style/BaseTextView"
+            android:text="-욕실 : 1개" />
+
+       <TextView
+           android:layout_marginTop="20dip"
+           android:textColor="#ffffff"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="Comment (2)"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_marginTop="10dip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </android.support.v7.widget.RecyclerView>
+    </LinearLayout>
+</layout>
