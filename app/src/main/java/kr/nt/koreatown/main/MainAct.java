@@ -14,6 +14,8 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -94,6 +96,8 @@ public class MainAct extends AppCompatActivity implements OnMapReadyCallback{
         public void onMapClick(LatLng latLng) {
             if(markerClickFlag){
                 binding.includeMain.detailView.setVisibility(View.GONE);
+                Animation alphaAni = AnimationUtils.loadAnimation(MainAct.this, R.anim.slide_out_top);
+                binding.includeMain.detailView.setAnimation(alphaAni);
                 binding.includeMain.toolbar.setBackgroundColor(Utils.getColor(MainAct.this,R.color.colorPrimary));
                 overlay.remove();
                 markerClickFlag =! markerClickFlag;
@@ -107,11 +111,20 @@ public class MainAct extends AppCompatActivity implements OnMapReadyCallback{
             CameraUpdate center = CameraUpdateFactory.newLatLng(marker.getPosition());
             if(markerClickFlag){ //마커가 클릭되있는상태
                 binding.includeMain.detailView.setVisibility(View.GONE);
+                Animation alphaAni = AnimationUtils.loadAnimation(MainAct.this, R.anim.slide_out_top);
+                binding.includeMain.detailView.setAnimation(alphaAni);
+
                 binding.includeMain.toolbar.setBackgroundColor(Utils.getColor(MainAct.this,R.color.colorPrimary));
                 overlay.remove();
 
             }else{ // 마커 클릭상태가 아닐때
                 binding.includeMain.detailView.setVisibility(View.VISIBLE);
+
+                binding.includeMain.drawer.close();
+
+                Animation alphaAni = AnimationUtils.loadAnimation(MainAct.this, R.anim.slide_in_top);
+                binding.includeMain.detailView.setAnimation(alphaAni);
+
                 binding.includeMain.toolbar.setBackgroundColor(Utils.getColor(MainAct.this,R.color.colorToolbar));
                 addOverLayView(marker);
                 gMap.animateCamera(center);
