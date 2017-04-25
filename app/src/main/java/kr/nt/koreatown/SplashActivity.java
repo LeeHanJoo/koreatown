@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 import kr.lhj.chichapermission.ChichaPermission;
 import kr.lhj.chichapermission.PermissionListener;
-import kr.nt.koreatown.main.MainAct;
+import kr.nt.koreatown.intro.LoginAct;
 import kr.nt.koreatown.util.Utils;
 
 public class SplashActivity extends AppCompatActivity {
@@ -70,7 +70,8 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void goNext(){
-        Intent intent = new Intent(SplashActivity.this,MainAct.class);
+        //Intent intent = new Intent(SplashActivity.this,MainAct.class);
+        Intent intent = new Intent(SplashActivity.this,LoginAct.class);
         startActivity(intent);
         finish();
     }
