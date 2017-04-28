@@ -1,14 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true">
 
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/app_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+
+        </android.support.design.widget.AppBarLayout>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/colorPrimary">
+            android:background="@color/colorPrimary"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            tools:showIn="@layout/loginact">
 
 
             <android.support.design.widget.TextInputLayout
@@ -80,7 +100,7 @@
                 android:src="@drawable/btn_reset" />
 
 
-            <!--<LinearLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
@@ -92,11 +112,16 @@
                     android:layout_weight="1"
                     android:gravity="center">
 
-                    <ImageView
+                    <Button
                         android:id="@+id/email_login"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/btn_join_email" />
+                        android:text="이메일"/>
+                  <!--  <ImageView
+                        android:id="@+id/email_login"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/btn_join_email" />-->
 
                 </LinearLayout>
 
@@ -106,11 +131,17 @@
                     android:layout_weight="1"
                     android:gravity="center">
 
-                    <ImageView
+                    <Button
                         android:id="@+id/facebook_login"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/btn_join_fb" />
+                        android:text="페이스북"/>
+
+                  <!--  <ImageView
+                        android:id="@+id/facebook_login"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/btn_join_fb" />-->
                 </LinearLayout>
 
                 <LinearLayout
@@ -119,15 +150,21 @@
                     android:layout_weight="1"
                     android:gravity="center">
 
-                    <ImageView
+                    <Button
                         android:id="@+id/kakao_login"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/btn_kakao" />
+                        android:text="카카오톡"/>
+
+                 <!--   <ImageView
+                        android:id="@+id/kakao_login"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/btn_kakao" />-->
                 </LinearLayout>
 
 
-            </LinearLayout>-->
+            </LinearLayout>
 
 
            <!-- <RelativeLayout
