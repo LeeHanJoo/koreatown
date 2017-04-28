@@ -2,6 +2,7 @@ package kr.nt.koreatown.main;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -12,6 +13,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -34,6 +36,7 @@ import java.util.ArrayList;
 import kr.nt.koreatown.Listener.MyMenuClickListener;
 import kr.nt.koreatown.R;
 import kr.nt.koreatown.databinding.MainactBinding;
+import kr.nt.koreatown.feed.RoomAct;
 import kr.nt.koreatown.util.Utils;
 import kr.nt.koreatown.view.ImagePagerAdapter;
 
@@ -52,7 +55,7 @@ public class MainAct extends AppCompatActivity implements OnMapReadyCallback{
     GroundOverlay overlay = null;
     public View marker_root_view;
     public boolean markerClickFlag = false;
-
+    public Menu menu;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -170,5 +173,26 @@ public class MainAct extends AppCompatActivity implements OnMapReadyCallback{
     }
 
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        this.menu = menu;
+        getMenuInflater().inflate(R.menu.messenger, menu);
+        //return true;
+        return super.onCreateOptionsMenu(menu);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(android.view.MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_add:
+                Intent intent = new Intent(MainAct.this, RoomAct.class);
+                startActivity(intent);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+
+    };
 
 }
