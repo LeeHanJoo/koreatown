@@ -33,17 +33,18 @@
             android:value="@string/kakao_app_key" />
 
         <activity android:name="kr.nt.koreatown.main.MainAct"
-            android:theme="@style/AppTheme.NoActionBar">
-           <!-- <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity android:name="kr.nt.koreatown.intro.LoginAct"
             android:theme="@style/AppTheme.NoActionBar"/>
 
+        <activity android:name=".feed.RoomAct"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity android:name=".feed.StoryAct"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity android:name=".SplashActivity"
             android:theme="@style/AppTheme.NoActionBar">

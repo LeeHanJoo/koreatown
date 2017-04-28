@@ -7,4 +7,10 @@
     <string name="splash_gps_d2_msg">위치서비스를 켜주세요.</string>
     <string name="splash_gps_d2_title">위치서비스 ON</string>
     <string name="googlemap_apikey">AIzaSyC-IApppvW4w5nU6zA1wFuDlVIl7kcJITM</string>
+
+    <string name="facebook_app_id">1466719856692083</string>
+
+    <string name="kakao_app_key">8761c012b4a6d733ec1c8e489ce723bd</string>
+    <string name="kakao_scheme">kakao8761c012b4a6d733ec1c8e489ce723bd</string>
+
 </resources>
