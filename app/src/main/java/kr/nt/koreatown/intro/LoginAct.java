@@ -28,6 +28,7 @@ public class LoginAct extends BaseLogin {
 
     LoginactBinding binding = null;
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,5 +79,7 @@ public class LoginAct extends BaseLogin {
             }
         }
     };
+
+
 }
 
