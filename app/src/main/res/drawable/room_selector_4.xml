@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/popMintButton_Selector">
+
+    <!-- Non Focused states -->
+    <item android:drawable="@drawable/circle01_04_off" android:state_checked="false"/>
+
+    <!-- Checked -->
+    <item android:drawable="@drawable/circle01_04_on" android:state_checked="true"/>
+
+</selector>
