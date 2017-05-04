@@ -232,7 +232,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:hint="달러"
-                        android:inputType="textEmailAddress"
+                        android:inputType="number"
                         android:padding="10dip"
                         android:textSize="15sp"
                         android:textStyle="bold" />
@@ -270,6 +270,7 @@
                         android:layout_marginTop="20dip">
 
                         <ImageView
+
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:src="@drawable/icon_photo" />
@@ -285,19 +286,29 @@
 
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_marginTop="10dip"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        <HorizontalScrollView
+                            android:layout_marginTop="10dip"
+                            android:layout_width="match_parent"
+                            android:layout_height="90dip">
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/add_photo"/>
+                            <LinearLayout
+                                android:id="@+id/addimagelayout"
+                                android:padding="10dip"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+                                <ImageView
+                                    android:id="@+id/addimage"
+                                    android:layout_width="80dip"
+                                    android:layout_height="match_parent"
+                                    android:src="@drawable/add_photo"/>
+                            </LinearLayout>
 
-                    </LinearLayout>
+
+                        </HorizontalScrollView>
+
 
                     <ImageView
+
                         android:layout_marginTop="20dip"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

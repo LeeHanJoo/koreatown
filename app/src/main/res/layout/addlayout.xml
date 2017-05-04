@@ -4,7 +4,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#333333">
+       >
 
         <LinearLayout
             android:gravity="center"
@@ -13,12 +13,14 @@
             android:layout_centerInParent="true">
 
             <ImageView
+                android:id="@+id/btn_addhouse"
                 android:layout_marginRight="10dip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/type_house"/>
 
             <ImageView
+                android:id="@+id/btn_addnews"
                 android:layout_marginLeft="10dip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
