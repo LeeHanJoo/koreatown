@@ -7,6 +7,7 @@ import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -37,6 +38,7 @@ import kr.nt.koreatown.Listener.MyMenuClickListener;
 import kr.nt.koreatown.R;
 import kr.nt.koreatown.databinding.MainactBinding;
 import kr.nt.koreatown.feed.RoomAct;
+import kr.nt.koreatown.util.MyLocation;
 import kr.nt.koreatown.util.Utils;
 import kr.nt.koreatown.view.ImagePagerAdapter;
 
@@ -79,6 +81,8 @@ public class MainAct extends AppCompatActivity implements OnMapReadyCallback{
 
         marker_root_view = LayoutInflater.from(this).inflate(marker, null);
         init();
+
+
     }
 
     private void init(){
@@ -149,17 +153,33 @@ public class MainAct extends AppCompatActivity implements OnMapReadyCallback{
         gMap.moveCamera(cu);
     }
 
+    MyLocation.LocationResult locationResult = new MyLocation.LocationResult() {
+        @Override
+        public void gotLocation(Location location) {
+
+          //  String msg = "lon: "+location.getLongitude()+" -- lat: "+location.getLatitude();
+           // Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+            drawMarker(location);
+
+        }
+    };
+
+    private void drawMarker(Location location){
+        LatLng currentGeo = new LatLng(location.getLatitude(), location.getLongitude());
+        gMap.addMarker(new MarkerOptions().position(currentGeo).title("테스트마커").icon(BitmapDescriptorFactory.fromBitmap(createDrawableFromView(this, marker_root_view))));
+        CameraUpdate cu = CameraUpdateFactory.newLatLngZoom(currentGeo, (float)18.0);
+        gMap.moveCamera(cu);
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         if (gMap == null) {
             gMap = googleMap;
             setUpMap();
         }
-        LatLng Shenzhen = new LatLng(37.383592, 126.932749);
-        gMap.addMarker(new MarkerOptions().position(Shenzhen).title("테스트마커").icon(BitmapDescriptorFactory.fromBitmap(createDrawableFromView(this, marker_root_view))));
-        CameraUpdate cu = CameraUpdateFactory.newLatLngZoom(Shenzhen, (float)18.0);
-        gMap.moveCamera(cu);
 
+        MyLocation location = new MyLocation();
+        location.getLocation(MainAct.this,locationResult);
     }
 
     private Bitmap createDrawableFromView(Context context, View view) {
