@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -31,6 +32,7 @@ import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 
@@ -38,7 +40,11 @@ import kr.nt.koreatown.Listener.MyMenuClickListener;
 import kr.nt.koreatown.R;
 import kr.nt.koreatown.databinding.MainactBinding;
 import kr.nt.koreatown.feed.RoomAct;
+import kr.nt.koreatown.feed.SelectAct;
+import kr.nt.koreatown.feed.StoryAct;
+import kr.nt.koreatown.util.BusProvider;
 import kr.nt.koreatown.util.MyLocation;
+import kr.nt.koreatown.util.RefreshViewEvent;
 import kr.nt.koreatown.util.Utils;
 import kr.nt.koreatown.view.ImagePagerAdapter;
 
@@ -81,7 +87,7 @@ public class MainAct extends AppCompatActivity implements OnMapReadyCallback{
 
         marker_root_view = LayoutInflater.from(this).inflate(marker, null);
         init();
-
+        BusProvider.getInstance().register(this);
 
     }
 
@@ -92,10 +98,21 @@ public class MainAct extends AppCompatActivity implements OnMapReadyCallback{
         binding.includeMain.content.pager.setAdapter(adapter);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        BusProvider.getInstance().unregister(this);
+    }
+
     private void setUpMap(){
         gMap.setOnMarkerClickListener(markerClick);
         gMap.setOnMapClickListener(mapClick);
 
+    }
+
+    @Subscribe
+    public void refreshView(RefreshViewEvent event){
+        Toast.makeText(this, "리프레쉬뷰 버스 들어옴", Toast.LENGTH_SHORT).show();
     }
 
     GoogleMap.OnMapClickListener mapClick = new GoogleMap.OnMapClickListener() {
@@ -159,7 +176,13 @@ public class MainAct extends AppCompatActivity implements OnMapReadyCallback{
 
           //  String msg = "lon: "+location.getLongitude()+" -- lat: "+location.getLatitude();
            // Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-            drawMarker(location);
+            if(location == null){
+                MyLocation location2 = new MyLocation();
+                location2.getLocation(MainAct.this,locationResult);
+            }else{
+                drawMarker(location);
+            }
+
 
         }
     };
@@ -207,12 +230,32 @@ public class MainAct extends AppCompatActivity implements OnMapReadyCallback{
     public boolean onOptionsItemSelected(android.view.MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_add:
-                Intent intent = new Intent(MainAct.this, RoomAct.class);
-                startActivity(intent);
+                Intent intent = new Intent(MainAct.this, SelectAct.class);
+                startActivityForResult(intent,5502);
                 break;
         }
         return super.onOptionsItemSelected(item);
 
     };
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode){
+            case 5502:
+                if(resultCode == RESULT_OK){
+                    String result = data.getStringExtra("ADD_FLAG");
+                    if(result.equals("1")){
+                        Intent intent = new Intent(MainAct.this, RoomAct.class);
+                        startActivity(intent);
+                    }else{
+                        Intent intent = new Intent(MainAct.this, StoryAct.class);
+                        startActivity(intent);
+                    }
+                }
+                break;
+        }
+
+
+    }
 }
