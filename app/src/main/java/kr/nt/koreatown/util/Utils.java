@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.TypedValue;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -129,5 +130,21 @@ public class Utils {
             return context.getResources().getDrawable(id);
         }
     }
+
+    public static int toPixel(Context context,int dpi){
+
+        int pixel = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,dpi,context.getResources().getDisplayMetrics());
+
+       // int pixel = (int)(dpi * ( context.getResources().getDisplayMetrics().density / 160 ));
+
+        return pixel;
+    }
+
+    /*public static int toDpi(Context context, int pixel){
+        float scale = context.getResources().getDisplayMetrics().density;
+
+        int dpi = (int)(pixel * (160 / context.getResources().getDisplayMetrics().density / 160));
+        return dpi;
+    }*/
 
 }
