@@ -42,9 +42,9 @@ import kr.nt.koreatown.databinding.MainactBinding;
 import kr.nt.koreatown.feed.RoomAct;
 import kr.nt.koreatown.feed.SelectAct;
 import kr.nt.koreatown.feed.StoryAct;
-import kr.nt.koreatown.util.BusProvider;
+import kr.nt.koreatown.bus.BusProvider;
 import kr.nt.koreatown.util.MyLocation;
-import kr.nt.koreatown.util.RefreshViewEvent;
+import kr.nt.koreatown.bus.RefreshViewEvent;
 import kr.nt.koreatown.util.Utils;
 import kr.nt.koreatown.view.ImagePagerAdapter;
 
@@ -182,8 +182,6 @@ public class MainAct extends AppCompatActivity implements OnMapReadyCallback{
             }else{
                 drawMarker(location);
             }
-
-
         }
     };
 
