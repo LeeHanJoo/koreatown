@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -13,7 +14,8 @@ import java.util.ArrayList;
 
 import kr.lhj.chichapermission.ChichaPermission;
 import kr.lhj.chichapermission.PermissionListener;
-import kr.nt.koreatown.main.MainAct;
+import kr.nt.koreatown.intro.LoginAct;
+import kr.nt.koreatown.util.MyLocation;
 import kr.nt.koreatown.util.Utils;
 
 public class SplashActivity extends AppCompatActivity {
@@ -38,12 +40,12 @@ public class SplashActivity extends AppCompatActivity {
                 .goCheck();
     }
 
-
     PermissionListener permissionlistener = new PermissionListener() {
         @Override
         public void onPermissionGranted() {
+
             inita();
-            Toast.makeText(SplashActivity.this, "권한 허가", Toast.LENGTH_SHORT).show();
+           // Toast.makeText(SplashActivity.this, "권한 허가", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -69,11 +71,35 @@ public class SplashActivity extends AppCompatActivity {
         }, 1000);
     }
 
+    MyLocation.LocationResult locationResult = new MyLocation.LocationResult() {
+        @Override
+        public void gotLocation(Location location) {
+            //  String msg = "lon: "+location.getLongitude()+" -- lat: "+location.getLatitude();
+            // Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+            if(location == null){
+                MyLocation location2 = new MyLocation();
+                location2.getLocation(SplashActivity.this,locationResult);
+            }else{
+                KoreaTown.myLocation = location;
+                Intent intent = new Intent(SplashActivity.this,LoginAct.class);
+                startActivity(intent);
+                finish();
+
+            }
+        }
+    };
+
+
+
     private void goNext(){
-        Intent intent = new Intent(SplashActivity.this,MainAct.class);
-        //Intent intent = new Intent(SplashActivity.this,LoginAct.class);
+        //Intent intent = new Intent(SplashActivity.this,MainAct.class);
+
+        MyLocation location = new MyLocation();
+        location.getLocation(SplashActivity.this,locationResult);
+
+      /*  Intent intent = new Intent(SplashActivity.this,LoginAct.class);
         startActivity(intent);
-        finish();
+        finish();*/
     }
 
     private void chkgps(){

@@ -3,6 +3,7 @@ package kr.nt.koreatown;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.location.Location;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 
@@ -21,7 +22,7 @@ public class KoreaTown extends Application {
     public static KoreaTown instance ;
     public static double[] my_gps = new double[2];
     private static volatile Activity currentActivity = null;
-
+    public static Location myLocation = null;
     @Override
     public void onCreate() {
         super.onCreate();
