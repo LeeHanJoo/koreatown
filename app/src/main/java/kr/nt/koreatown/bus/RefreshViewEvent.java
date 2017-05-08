@@ -1,4 +1,4 @@
-package kr.nt.koreatown.util;
+package kr.nt.koreatown.bus;
 
 /**
  * Created by user on 2017-05-04.

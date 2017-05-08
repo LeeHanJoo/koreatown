@@ -1,4 +1,4 @@
-package kr.nt.koreatown.util;
+package kr.nt.koreatown.bus;
 
 import com.squareup.otto.Bus;
 
