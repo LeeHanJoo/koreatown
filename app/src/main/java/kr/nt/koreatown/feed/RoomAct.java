@@ -14,8 +14,8 @@ import com.bumptech.glide.Glide;
 import gun0912.tedbottompicker.TedBottomPicker;
 import kr.nt.koreatown.R;
 import kr.nt.koreatown.databinding.RoomactBinding;
-import kr.nt.koreatown.util.BusProvider;
-import kr.nt.koreatown.util.RefreshViewEvent;
+import kr.nt.koreatown.bus.BusProvider;
+import kr.nt.koreatown.bus.RefreshViewEvent;
 import kr.nt.koreatown.util.Utils;
 
 /**
