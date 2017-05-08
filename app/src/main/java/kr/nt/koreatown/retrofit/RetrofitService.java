@@ -3,6 +3,7 @@ package kr.nt.koreatown.retrofit;
 import java.util.Map;
 
 import kr.nt.koreatown.vo.CommonVO;
+import kr.nt.koreatown.vo.MsgVO;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -27,7 +28,8 @@ public interface RetrofitService {
 
     @Multipart
     @POST("/mobile/m_join")
-    public Call<CommonVO> postSign(@PartMap Map<String, RequestBody> params);
+    public Call<MsgVO> postSign(@PartMap Map<String, RequestBody> params);
+
 
 
     @Multipart
@@ -42,6 +44,9 @@ public interface RetrofitService {
     public Call<CommonVO> doLogin(@Query("ID")  String ID,@Query("OS_TYPE") String OS_TYPE,@Query("PASSWORD") String PASSWORD
             ,@Query("PUSH_KEY") String PUSH_KEY,@Query("DEVICE_ID") String DEVICE_ID,@Query("OS_VER") String OS_VER
             , @Query("LAT") String LAT ,@Query("LON") String LON  );
+
+    @GET("/mobile/m_login")
+    public Call<MsgVO> doLogin(@PartMap Map<String, RequestBody> params);
 
     @GET("/mobile/m_mypage")
     public Call<CommonVO> getMyPage(@Query("ID")  String ID);
