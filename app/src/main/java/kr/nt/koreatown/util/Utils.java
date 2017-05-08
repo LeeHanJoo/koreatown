@@ -6,9 +6,13 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.Settings;
 import android.util.TypedValue;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by dji on 15/12/18.
@@ -146,5 +150,48 @@ public class Utils {
         int dpi = (int)(pixel * (160 / context.getResources().getDisplayMetrics().density / 160));
         return dpi;
     }*/
+
+
+    public static boolean validEmail(String emailAddr){
+        //or ^[_0-9a-zA-Z-]+@[0-9a-zA-Z-]+(.[_0-9a-zA-Z-]+)*$
+        //^[a-zA-Z0-9]+@[a-zA-Z0-9]+$
+        String pattern = "^[_0-9a-zA-Z-]+@[0-9a-zA-Z-]+(.[_0-9a-zA-Z-]+)*$";
+        Pattern p = Pattern.compile(pattern);
+        Matcher m = p.matcher(emailAddr);
+        boolean b = m.matches();
+        return b;
+    }
+
+    public static boolean validPhone(String phoneNum){
+        String pattern = "^\\d{2,3} - \\d{3,4} - \\d{4}$";
+        Pattern p = Pattern.compile(pattern);
+        Matcher m = p.matcher(phoneNum);
+        boolean b = m.matches();
+        return b;
+    }
+
+    public static boolean validJumin(String juminNum){
+        String pattern = "\\d{6} \\- [1-4]\\d{6}";
+        Pattern p = Pattern.compile(pattern);
+        Matcher m = p.matcher(juminNum);
+        boolean b = m.matches();
+        return b;
+    }
+
+    public static String getOsVersion(){
+        return Build.VERSION.RELEASE;
+    }
+
+    public static String getAndroidID(Context mContext){
+        return Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
+
+    }
+
+    private static final String Passwrod_PATTERN = "^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{6,15}$";
+    public static boolean Passwrodvalidate(final String hex) {
+        Pattern pattern = Pattern.compile(Passwrod_PATTERN);
+        Matcher matcher = pattern.matcher(hex);
+        return matcher.matches();
+    }
 
 }
