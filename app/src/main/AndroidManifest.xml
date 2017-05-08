@@ -40,6 +40,9 @@
         <activity android:name="kr.nt.koreatown.main.MainAct"
             android:theme="@style/AppTheme.NoActionBar"/>
 
+        <activity android:name=".intro.SignEmailAct"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
         <activity android:name=".feed.SelectAct"
             android:theme="@android:style/Theme.Dialog" />
 
