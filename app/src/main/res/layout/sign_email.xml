@@ -37,10 +37,29 @@
                     android:background="@color/colorPrimary">
 
                     <android.support.design.widget.TextInputLayout
-                        android:id="@+id/input_email_layout"
+                        android:id="@+id/input_id_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="25dip"
+                        android:gravity="center_horizontal">
+
+                        <EditText
+                            android:id="@+id/input_id"
+                            android:layout_width="250dip"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:hint="아이디"
+                            android:inputType="text"
+                            android:padding="10dip"
+                            android:textSize="15sp" />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/input_email_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/input_id_layout"
+                        android:layout_marginTop="10dip"
                         android:gravity="center_horizontal">
 
                         <EditText
