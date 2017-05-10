@@ -1,7 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    >
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="user"
+            type="kr.nt.koreatown.vo.MemberVO"/>
+     <!--   <variable name="MEMBER_ID" type="String"/>
+        <variable name="MEMBER_BIRTH" type="String"/>
+        <variable name="MEMBER_EMAIL" type="String"/>
+        <variable name="MEMBER_NICK" type="String"/>
+        <variable name="MEMBER_SEX" type="String"/>
+        <variable name="MEMBER_TYPE" type="String"/>-->
+    </data>
+
+
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -27,31 +41,30 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            tools:showIn="@layout/profileact">
 
             <RelativeLayout
-                android:background="#ffffff"
                 android:id="@+id/myinfo_layout"
-                android:layout_width="match_parent"
-                android:layout_height="60dip"
-                android:padding="15dip">
+                style="@style/ProfileLayout">
 
-                <TextView
+                <EditText
                     android:id="@+id/profile_type"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:text="(페이스북)" />
+                    android:text='@{"(" + user.MEMBER_TYPE + ")" }' />
 
-                <TextView
+                <EditText
                     android:layout_marginRight="3dip"
                     android:layout_toLeftOf="@id/profile_type"
                     android:id="@+id/profile_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:text="최우주" />
+                    android:text="@{user.MEMBER_NICK}" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -70,18 +83,16 @@
 
 
             <RelativeLayout
-                android:background="#ffffff"
                 android:id="@+id/data_layout"
-                android:layout_width="match_parent"
-                android:layout_height="60dip"
-                android:padding="15dip">
+                style="@style/ProfileLayout">
 
-                <TextView
+                <EditText
+                    android:id="@+id/profile_email"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:text="jellyznet@gmail.com" />
+                    android:text="@{user.MEMBER_EMAIL}" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -96,18 +107,15 @@
                 android:background="#dcdcdc"/>
 
             <RelativeLayout
-                android:background="#ffffff"
                 android:id="@+id/version_layout"
-                android:layout_width="match_parent"
-                android:layout_height="60dip"
-                android:padding="15dip">
+                style="@style/ProfileLayout">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:text="jellyznet"/>
+                    android:text="@{user.MEMBER_ID}"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -121,18 +129,17 @@
                 android:layout_height="1dip"
                 android:background="#dcdcdc"/>
             <RelativeLayout
-                android:background="#ffffff"
                 android:id="@+id/birth_layout"
-                android:layout_width="match_parent"
-                android:layout_height="60dip"
-                android:padding="15dip">
+                style="@style/ProfileLayout">
 
-                <TextView
+                <EditText
+                    android:id="@+id/profile_birth"
+                    android:inputType="number"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:text="840304"/>
+                    android:text='@{user.MEMBER_BIRTH.equals("0")  ? "" : user.MEMBER_BIRTH}'/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -147,18 +154,16 @@
                 android:layout_height="1dip"
                 android:background="#dcdcdc"/>
             <RelativeLayout
-                android:background="#ffffff"
                 android:id="@+id/logout_layout"
-                android:layout_width="match_parent"
-                android:layout_height="60dip"
-                android:padding="15dip">
+                style="@style/ProfileLayout">
 
-                <TextView
+                <EditText
+                    android:id="@+id/profile_sex"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:text="남자"/>
+                    android:text='@{user.MEMBER_SEX}'/>
 
                 <TextView
                     android:layout_width="wrap_content"
