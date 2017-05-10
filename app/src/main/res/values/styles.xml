@@ -28,4 +28,14 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
+
+    <style name="ProfileLayout">
+        <item name="android:background">#ffffff</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">60dip</item>
+        <item name="android:paddingLeft">15dip</item>
+        <item name="android:paddingRight">15dip</item>
+
+    </style>
+
 </resources>
