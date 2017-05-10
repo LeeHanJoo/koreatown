@@ -26,13 +26,15 @@ import java.util.Map;
 import kr.nt.koreatown.Common;
 import kr.nt.koreatown.KoreaTown;
 import kr.nt.koreatown.R;
+import kr.nt.koreatown.bus.BusProvider;
 import kr.nt.koreatown.bus.LoginEvent;
 import kr.nt.koreatown.databinding.LoginactBinding;
 import kr.nt.koreatown.main.MainAct;
 import kr.nt.koreatown.retrofit.RetrofitAdapter;
 import kr.nt.koreatown.retrofit.RetrofitUtil;
-import kr.nt.koreatown.bus.BusProvider;
+import kr.nt.koreatown.util.SharedManager;
 import kr.nt.koreatown.util.Utils;
+import kr.nt.koreatown.vo.MemberVO;
 import kr.nt.koreatown.vo.MsgVO;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -82,6 +84,14 @@ public class LoginAct extends BaseLogin {
         binding.facebookLogin.setOnClickListener(signClick);
         binding.kakaoLogin.setOnClickListener(signClick);
         binding.loginBtn.setOnClickListener(signClick);
+
+        boolean autoLogin = SharedManager.getInstance().getBoolean(this,Common.AUTO_LOGIN);
+        if(autoLogin){
+            String ID = SharedManager.getInstance().getString(this, Common.ID);
+            String PASS = SharedManager.getInstance().getString(this, Common.PASSWORD);
+            String TYPE = SharedManager.getInstance().getString(this, Common.MEMBER_TYPE);
+            doLogin(ID,PASS,TYPE);
+        }
     }
 
 
@@ -131,8 +141,8 @@ public class LoginAct extends BaseLogin {
             Toast.makeText(this,"비밀번호를 입력해주세요.",Toast.LENGTH_SHORT).show();
             return;
         }
-
-        sendLogin(id,password);
+        doLogin(id,password,Common.TYPE_EMAIL);
+        //sendLogin(id,password);
     }
 
     private void sendLogin(String ID,String PASSWORD){
@@ -174,7 +184,12 @@ public class LoginAct extends BaseLogin {
 
     @Subscribe
     public void LoginComple(LoginEvent event){
-        Toast.makeText(this, "리프레쉬뷰 로그인 버스 들어옴", Toast.LENGTH_SHORT).show();
+        MemberVO memberVO = event.getMemberVO();
+        SharedManager.getInstance().setString(LoginAct.this, Common.ID,memberVO.getMEMBER_ID());
+        SharedManager.getInstance().setString(LoginAct.this, Common.PASSWORD,memberVO.getPASSWORD());
+        SharedManager.getInstance().setString(LoginAct.this,Common.MEMBER_TYPE ,memberVO.getMEMBER_TYPE());
+        SharedManager.getInstance().setBoolean(LoginAct.this,Common.AUTO_LOGIN,true);
+        //Toast.makeText(this, "리프레쉬뷰 로그인 버스 들어옴", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(LoginAct.this, MainAct.class);
         startActivity(intent);
         finish();

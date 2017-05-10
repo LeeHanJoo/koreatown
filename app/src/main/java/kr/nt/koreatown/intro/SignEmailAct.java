@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import kr.nt.koreatown.Common;
+import kr.nt.koreatown.KoreaTown;
 import kr.nt.koreatown.R;
 import kr.nt.koreatown.bus.BusProvider;
 import kr.nt.koreatown.bus.LoginEvent;
@@ -23,6 +24,7 @@ import kr.nt.koreatown.databinding.SignEmailBinding;
 import kr.nt.koreatown.retrofit.RetrofitAdapter;
 import kr.nt.koreatown.retrofit.RetrofitUtil;
 import kr.nt.koreatown.util.Utils;
+import kr.nt.koreatown.vo.MemberVO;
 import kr.nt.koreatown.vo.MsgVO;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -206,7 +208,7 @@ public class SignEmailAct extends AppCompatActivity{
     }
 
 
-    private void sendSign(String ID,String EMAIL,String PASSWORD , String NICK_NAME,String SEX,String BIRTHDAY){
+    private void sendSign(final String ID,String EMAIL,final String PASSWORD , String NICK_NAME,String SEX,String BIRTHDAY){
         String PUSH_KEY = "";
         String OS_VER = Utils.getOsVersion();
         String DEVICE_ID = Utils.getAndroidID(this);
@@ -234,8 +236,7 @@ public class SignEmailAct extends AppCompatActivity{
                 MsgVO result = response.body();
                 if(result != null ){
                     if(result.getResult().equals("1")){ // 성공
-                        BusProvider.getInstance().post(new LoginEvent());
-                        finish();
+                        doLogin(ID,PASSWORD,Common.TYPE_EMAIL);
                     }else{
 
                     }
@@ -248,5 +249,97 @@ public class SignEmailAct extends AppCompatActivity{
                 Log.e("","");
             }
         });
+    }
+
+    public void doLogin(final String ID , final String PASSWORD, final String loginType){
+
+        String PUSH_KEY = "";
+        String OS_VER = Utils.getOsVersion();
+        String DEVICE_ID = Utils.getAndroidID(this);
+
+        Map<String, RequestBody> params = new HashMap<String, RequestBody>();
+        params.put(Common.ID, RetrofitUtil.toRequestBody(ID));
+        params.put(Common.PASSWORD,RetrofitUtil.toRequestBody(PASSWORD));
+        params.put(Common.PUSH_KEY,RetrofitUtil.toRequestBody(PUSH_KEY));
+        params.put(Common.OS_VER,RetrofitUtil.toRequestBody(OS_VER));
+        params.put(Common.OS_TYPE,RetrofitUtil.toRequestBody(Common.TYPE_OS_ANDROID));
+        params.put(Common.DEVICE_ID,RetrofitUtil.toRequestBody(DEVICE_ID));
+        params.put(Common.LAT,RetrofitUtil.toRequestBody(String.valueOf(KoreaTown.myLocation.getLatitude())));
+        params.put(Common.LON,RetrofitUtil.toRequestBody(String.valueOf(KoreaTown.myLocation.getLongitude())));
+        params.put(Common.MEMBER_TYPE,RetrofitUtil.toRequestBody(loginType));
+        Call<MsgVO> call =  RetrofitAdapter.getInstance().doLogin(params);
+        call.enqueue(new Callback<MsgVO>() {
+            @Override
+            public void onResponse(Call<MsgVO> call, Response<MsgVO> response) {
+                MsgVO item = response.body();
+                if(item != null ){
+                    if(item.getResult().equals("1")){ // 성공
+                        MemberVO memberVO = new MemberVO();
+                        memberVO.setMEMBER_ID(ID);
+                        memberVO.setPASSWORD(PASSWORD);
+                        memberVO.setMEMBER_TYPE(loginType);
+                        BusProvider.getInstance().post(new LoginEvent(memberVO));
+                       /* Intent intent = new Intent(BaseLogin.this, MainAct.class);
+                        startActivity(intent);
+                        finish();*/
+                    }else if(item.getResult().equals("2") || item.getResult().equals("3")){ // 무조건 로그인 api 재호출
+                        doOnlyLogin(ID,PASSWORD,loginType);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MsgVO> call, Throwable t) {
+
+            }
+        });
+
+
+    }
+
+    public void doOnlyLogin(final String ID , final String PASSWORD, final String loginType){
+
+        String PUSH_KEY = "";
+        String OS_VER = Utils.getOsVersion();
+        String DEVICE_ID = Utils.getAndroidID(this);
+
+        Map<String, RequestBody> params = new HashMap<String, RequestBody>();
+        params.put(Common.ID, RetrofitUtil.toRequestBody(ID));
+        params.put(Common.PASSWORD,RetrofitUtil.toRequestBody(PASSWORD));
+        params.put(Common.PUSH_KEY,RetrofitUtil.toRequestBody(PUSH_KEY));
+        params.put(Common.OS_VER,RetrofitUtil.toRequestBody(OS_VER));
+        params.put(Common.DEVICE_ID,RetrofitUtil.toRequestBody(DEVICE_ID));
+        params.put(Common.LAT,RetrofitUtil.toRequestBody(String.valueOf(KoreaTown.myLocation.getLatitude())));
+        params.put(Common.LON,RetrofitUtil.toRequestBody(String.valueOf(KoreaTown.myLocation.getLongitude())));
+        params.put(Common.MEMBER_TYPE,RetrofitUtil.toRequestBody(loginType));
+        Call<MsgVO> call =  RetrofitAdapter.getInstance().doOnlyLogin(params);
+        call.enqueue(new Callback<MsgVO>() {
+            @Override
+            public void onResponse(Call<MsgVO> call, Response<MsgVO> response) {
+                MsgVO item = response.body();
+                if(item != null ){
+                    if(item.getResult().equals("1")){ // 성공
+                        MemberVO memberVO = new MemberVO();
+                        memberVO.setMEMBER_ID(ID);
+                        memberVO.setPASSWORD(PASSWORD);
+                        memberVO.setMEMBER_TYPE(loginType);
+                        BusProvider.getInstance().post(new LoginEvent(memberVO));
+
+                       /* Intent intent = new Intent(BaseLogin.this, MainAct.class);
+                        startActivity(intent);
+                        finish();*/
+                    }else {
+
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MsgVO> call, Throwable t) {
+
+            }
+        });
+
+
     }
 }

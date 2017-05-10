@@ -31,6 +31,25 @@ import com.kakao.util.exception.KakaoException;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import kr.nt.koreatown.Common;
+import kr.nt.koreatown.KoreaTown;
+import kr.nt.koreatown.bus.BusProvider;
+import kr.nt.koreatown.bus.LoginEvent;
+import kr.nt.koreatown.retrofit.RetrofitAdapter;
+import kr.nt.koreatown.retrofit.RetrofitUtil;
+import kr.nt.koreatown.util.Utils;
+import kr.nt.koreatown.vo.MemberVO;
+import kr.nt.koreatown.vo.MsgVO;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 /**
  * Created by user on 2017-04-25.
  */
@@ -96,6 +115,12 @@ public class BaseLogin extends AppCompatActivity {
         com.kakao.auth.Session.getCurrentSession().open(AuthType.KAKAO_TALK_EXCLUDE_NATIVE_LOGIN, this);
     }
     protected void KakaorequestMe() {
+        List<String> propertyKeys = new ArrayList<String>();
+        propertyKeys.add("kaccount_email");
+        propertyKeys.add("nickname");
+        propertyKeys.add("kaccount_email_verified");
+        propertyKeys.add("thumbnail_image");
+
         UserManagement.requestMe(new MeResponseCallback() {
             @Override
             public void onFailure(ErrorResult errorResult) {
@@ -122,9 +147,14 @@ public class BaseLogin extends AppCompatActivity {
                 //String uuid = userProfile.getUUID();
 
 
-                String	userId = String.valueOf(userProfile.getId());
-                String userName = userProfile.getNickname();
-                signKakao(userId,userId,userName);
+                String userId = String.valueOf(userProfile.getId());
+                String userNickname = userProfile.getNickname();
+                String email = userProfile.getProperties().get("kaccount_email") ==  null ? "" : "";
+                String kaccount_email_verified = userProfile.getProperties().get("kaccount_email_verified");
+                //String userImage = userProfile.getThumbnailImagePath();
+                // userProfile.get
+                //userProfile.getNickname();
+                signKakao(userId,userId,userNickname,email);
             }
 
             @Override
@@ -132,7 +162,7 @@ public class BaseLogin extends AppCompatActivity {
                 // 자동가입이 아닐경우 동의창
                 Log.e("","");
             }
-        });
+        },propertyKeys,false);
     }
 
     private FacebookCallback<LoginResult> callback = new FacebookCallback<LoginResult>() {
@@ -150,19 +180,20 @@ public class BaseLogin extends AppCompatActivity {
                                 JSONObject object,
                                 GraphResponse response) {
                             try{
-                                //String userId = response.getJSONObject().getString("email");
+                                String userEmail = response.getJSONObject().getString("email");
                                 String userId = response.getJSONObject().getString("id");
-                                String userPw = response.getJSONObject().getString("id");
+                                String userPw = userId;
                                 String gender = response.getJSONObject().getString("gender");
                                 String name = response.getJSONObject().getString("name");
-                                singFacebook(userId,userPw,gender,name);
+                               // String birthday = response.getJSONObject().getString("birthday");
+                                singFacebook(userId,userPw,userEmail,getGender(gender),name);
                             }catch(Exception e){
                                 e.printStackTrace();
                             }
                         }
                     });
             Bundle parameters = new Bundle();
-            parameters.putString("fields", "id,name,link,email,gender,age_range");
+            parameters.putString("fields", "id,name,email,gender,birthday");
             request.setParameters(parameters);
             request.executeAsync();
         }
@@ -178,7 +209,51 @@ public class BaseLogin extends AppCompatActivity {
         }
     };
 
-    public void signKakao(final String id,final  String pw,final String name){
+    public void signKakao(final String ID,final  String PASSWORD,final String NICK_NAME,String EMAIL){
+        String PUSH_KEY = "";
+        String OS_VER = Utils.getOsVersion();
+        String DEVICE_ID = Utils.getAndroidID(this);
+
+        Map<String, RequestBody> params = new HashMap<String, RequestBody>();
+        params.put(Common.ID, RetrofitUtil.toRequestBody(ID));
+        params.put(Common.EMAIL,RetrofitUtil.toRequestBody(EMAIL));
+        params.put(Common.PASSWORD,RetrofitUtil.toRequestBody(PASSWORD));
+        //params.put(BIRTHDAY,RetrofitUtil.toRequestBody(BIRTHDAY));
+
+        params.put(NICK_NAME,RetrofitUtil.toRequestBody(NICK_NAME));
+      //  params.put(SEX,RetrofitUtil.toRequestBody(SEX));
+        params.put(Common.PUSH_KEY,RetrofitUtil.toRequestBody(PUSH_KEY));
+
+        params.put(Common.OS_VER,RetrofitUtil.toRequestBody(OS_VER));
+        params.put(Common.DEVICE_ID,RetrofitUtil.toRequestBody(DEVICE_ID));
+
+        params.put(Common.OS_TYPE,RetrofitUtil.toRequestBody(Common.TYPE_OS_ANDROID));
+        params.put(Common.MEMBER_TYPE,RetrofitUtil.toRequestBody(Common.TYPE_KAKAO));
+
+        Call<MsgVO> call = RetrofitAdapter.getInstance().postSign(params);
+        call.enqueue(new Callback<MsgVO>() {
+            @Override
+            public void onResponse(Call<MsgVO> call, Response<MsgVO> response) {
+                MsgVO result = response.body();
+                if(result != null ){
+                    if(result.getResult().equals("1")){ // 성공
+                        doLogin(ID,PASSWORD,Common.TYPE_KAKAO);
+                        //BusProvider.getInstance().post(new LoginEvent());
+                        //finish();
+                    }else if(result.getResult().equals("2")){ // 이미아이디있음 로그인 시도
+                        doLogin(ID,PASSWORD,Common.TYPE_KAKAO);
+                    }else{
+                        //CommonUtil.showOnBtnDialog(BaseLogin.this,"카카오로그인",item.getData().getMsg(),null);
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<MsgVO> call, Throwable t) {
+                Log.e("","");
+            }
+        });
        /* final String pushkey = SharedManager.getInstance().getString(this, Common.PUSH_KEY);
         final String deviceId = CommonUtil.getDeviceId(this);
         Call<MemberVO> call = RetrofitAdapter.getInstance().postSign(id,id, pw, "", "", "", "", pushkey, Common.OS_TYPE, deviceId,name,"K");
@@ -217,7 +292,52 @@ public class BaseLogin extends AppCompatActivity {
         });*/
     }
 
-    public void singFacebook(final String id,final  String pw,final String gender,final String name){
+    public void singFacebook(final String ID,final  String PASSWORD,String EMAIL,final String SEX,final String NICK_NAME){
+
+        String PUSH_KEY = "";
+        String OS_VER = Utils.getOsVersion();
+        String DEVICE_ID = Utils.getAndroidID(this);
+
+        Map<String, RequestBody> params = new HashMap<String, RequestBody>();
+        params.put(Common.ID, RetrofitUtil.toRequestBody(ID));
+        params.put(Common.EMAIL,RetrofitUtil.toRequestBody(EMAIL));
+        params.put(Common.PASSWORD,RetrofitUtil.toRequestBody(PASSWORD));
+        //params.put(BIRTHDAY,RetrofitUtil.toRequestBody(BIRTHDAY));
+
+        params.put(Common.NICK_NAME,RetrofitUtil.toRequestBody(NICK_NAME));
+        params.put(Common.SEX,RetrofitUtil.toRequestBody(SEX));
+        params.put(Common.PUSH_KEY,RetrofitUtil.toRequestBody(PUSH_KEY));
+
+        params.put(Common.OS_VER,RetrofitUtil.toRequestBody(OS_VER));
+        params.put(Common.DEVICE_ID,RetrofitUtil.toRequestBody(DEVICE_ID));
+
+        params.put(Common.OS_TYPE,RetrofitUtil.toRequestBody(Common.TYPE_OS_ANDROID));
+        params.put(Common.MEMBER_TYPE,RetrofitUtil.toRequestBody(Common.TYPE_FACEBOOK));
+
+        Call<MsgVO> call = RetrofitAdapter.getInstance().postSign(params);
+        call.enqueue(new Callback<MsgVO>() {
+            @Override
+            public void onResponse(Call<MsgVO> call, Response<MsgVO> response) {
+                MsgVO result = response.body();
+                if(result != null ){
+                    if(result.getResult().equals("1")){ // 성공
+                        doLogin(ID,PASSWORD,Common.TYPE_FACEBOOK);
+                        //BusProvider.getInstance().post(new LoginEvent());
+                       // finish();
+                    }else if(result.getResult().equals("2")){ // 이미아이디있음 로그인 시도
+                        doLogin(ID,PASSWORD,Common.TYPE_FACEBOOK);
+                    }else{
+                        //CommonUtil.showOnBtnDialog(BaseLogin.this,"카카오로그인",item.getData().getMsg(),null);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MsgVO> call, Throwable t) {
+                Log.e("","");
+            }
+        });
+
         /*final String pushkey = SharedManager.getInstance().getString(this, Common.PUSH_KEY);
         final String deviceId = CommonUtil.getDeviceId(this);
         Call<MemberVO> call = RetrofitAdapter.getInstance().postSign(id,id, pw, "", "", getGender(gender), "", pushkey, Common.OS_TYPE, deviceId,name,"F");
@@ -260,7 +380,139 @@ public class BaseLogin extends AppCompatActivity {
         });*/
     }
 
-    public void doLogin(final String id,final String pw, final String pushkey, final String deviceId,final String loginType){
+    public void doLogin(final String ID , final String PASSWORD, final String loginType){
+
+        String PUSH_KEY = "";
+        String OS_VER = Utils.getOsVersion();
+        String DEVICE_ID = Utils.getAndroidID(this);
+
+        Map<String, RequestBody> params = new HashMap<String, RequestBody>();
+        params.put(Common.ID, RetrofitUtil.toRequestBody(ID));
+        params.put(Common.PASSWORD,RetrofitUtil.toRequestBody(PASSWORD));
+        params.put(Common.PUSH_KEY,RetrofitUtil.toRequestBody(PUSH_KEY));
+        params.put(Common.OS_VER,RetrofitUtil.toRequestBody(OS_VER));
+        params.put(Common.OS_TYPE,RetrofitUtil.toRequestBody(Common.TYPE_OS_ANDROID));
+        params.put(Common.DEVICE_ID,RetrofitUtil.toRequestBody(DEVICE_ID));
+        params.put(Common.LAT,RetrofitUtil.toRequestBody(String.valueOf(KoreaTown.myLocation.getLatitude())));
+        params.put(Common.LON,RetrofitUtil.toRequestBody(String.valueOf(KoreaTown.myLocation.getLongitude())));
+        params.put(Common.MEMBER_TYPE,RetrofitUtil.toRequestBody(loginType));
+        Call<MsgVO> call =  RetrofitAdapter.getInstance().doLogin(params);
+        call.enqueue(new Callback<MsgVO>() {
+            @Override
+            public void onResponse(Call<MsgVO> call, Response<MsgVO> response) {
+                MsgVO item = response.body();
+                if(item != null ){
+                    if(item.getResult().equals("1")){ // 성공
+                        MemberVO memberVO = new MemberVO();
+                        memberVO.setMEMBER_ID(ID);
+                        memberVO.setPASSWORD(PASSWORD);
+                        memberVO.setMEMBER_TYPE(loginType);
+                        BusProvider.getInstance().post(new LoginEvent(memberVO));
+                       /* Intent intent = new Intent(BaseLogin.this, MainAct.class);
+                        startActivity(intent);
+                        finish();*/
+                    }else if(item.getResult().equals("2") || item.getResult().equals("3")){ // 무조건 로그인 api 재호출
+                        doOnlyLogin(ID,PASSWORD,loginType);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MsgVO> call, Throwable t) {
+
+            }
+        });
+
+        /*Call<MemberVO> call = RetrofitAdapter.getInstance().doLogin(id, Common.OS_TYPE, pushkey, pw, deviceId);
+        call.enqueue(new Callback<MemberVO>() {
+            @Override
+            public void onResponse(Call<MemberVO> call, Response<MemberVO> response) {
+                MemberVO item = response.body();
+                if(item == null || item.getResult() == null){
+                    CommonUtil.showOnBtnDialog(BaseLogin.this,"서버오류","잠시후 다시시도해주세요",null);
+                }else{
+                    if(item.getResult().equals("1")) { // 로그인 성공
+                        SharedManager.getInstance().setString(BaseLogin.this,Common.USER_ID,id);
+                        SharedManager.getInstance().setString(BaseLogin.this,Common.USER_PW,pw);
+                        SharedManager.getInstance().setString(BaseLogin.this, Common.APP_LOGINTYPE, loginType);
+                        SharedManager.getInstance().setBoolean(BaseLogin.this, Common.AUTOLOGIN, true);
+                        Intent intent = new Intent(BaseLogin.this, MainActivity.class);
+                        intent.putExtra("PUSHYN", getIntent().getBooleanExtra("PUSHYN", false));
+                        intent.putExtra("PUSHITEM", getIntent().getParcelableExtra("PUSHITEM"));
+                        startActivity(intent);
+                        finish();
+                    }else{
+                        if(item.getResult().equals("2") ||item.getResult().equals("3") ){
+                            CommonUtil.showTwoBtnDialog(BaseLogin.this, "로그인", item.getData().getMsg() + "\n 계속 진행하시겠습니까?", new CommonUtil.onDialogClick() {
+                                @Override
+                                public void setonConfirm() {
+                                    goLogin(id,pw,pushkey,deviceId,loginType);
+                                }
+
+                                @Override
+                                public void setonCancel() {
+
+                                }
+                            });
+
+                        }else{
+                            CommonUtil.showOnBtnDialog(BaseLogin.this,"로그인",item.getData().getMsg(),null);
+                        }
+
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MemberVO> call, Throwable t) {
+                CommonUtil.showOnBtnDialog(BaseLogin.this,"서버오류", "잠시후 다시시도해주세요",null);
+            }
+        });*/
+    }
+
+    public void doOnlyLogin(final String ID , final String PASSWORD, final String loginType){
+
+        String PUSH_KEY = "";
+        String OS_VER = Utils.getOsVersion();
+        String DEVICE_ID = Utils.getAndroidID(this);
+
+        Map<String, RequestBody> params = new HashMap<String, RequestBody>();
+        params.put(Common.ID, RetrofitUtil.toRequestBody(ID));
+        params.put(Common.PASSWORD,RetrofitUtil.toRequestBody(PASSWORD));
+        params.put(Common.PUSH_KEY,RetrofitUtil.toRequestBody(PUSH_KEY));
+        params.put(Common.OS_VER,RetrofitUtil.toRequestBody(OS_VER));
+        params.put(Common.DEVICE_ID,RetrofitUtil.toRequestBody(DEVICE_ID));
+        params.put(Common.LAT,RetrofitUtil.toRequestBody(String.valueOf(KoreaTown.myLocation.getLatitude())));
+        params.put(Common.LON,RetrofitUtil.toRequestBody(String.valueOf(KoreaTown.myLocation.getLongitude())));
+        params.put(Common.MEMBER_TYPE,RetrofitUtil.toRequestBody(loginType));
+        Call<MsgVO> call =  RetrofitAdapter.getInstance().doOnlyLogin(params);
+        call.enqueue(new Callback<MsgVO>() {
+            @Override
+            public void onResponse(Call<MsgVO> call, Response<MsgVO> response) {
+                MsgVO item = response.body();
+                if(item != null ){
+                    if(item.getResult().equals("1")){ // 성공
+                        MemberVO memberVO = new MemberVO();
+                        memberVO.setMEMBER_ID(ID);
+                        memberVO.setPASSWORD(PASSWORD);
+                        memberVO.setMEMBER_TYPE(loginType);
+                        BusProvider.getInstance().post(new LoginEvent(memberVO));
+
+                       /* Intent intent = new Intent(BaseLogin.this, MainAct.class);
+                        startActivity(intent);
+                        finish();*/
+                    }else {
+
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MsgVO> call, Throwable t) {
+
+            }
+        });
+
         /*Call<MemberVO> call = RetrofitAdapter.getInstance().doLogin(id, Common.OS_TYPE, pushkey, pw, deviceId);
         call.enqueue(new Callback<MemberVO>() {
             @Override
@@ -311,9 +563,9 @@ public class BaseLogin extends AppCompatActivity {
     public String getGender(String gender){
         String result = "";
         if (gender != null && gender.equals("male")){
-            result = "남자";
+            result = "M";
         }else if(gender != null && gender.equals("female")){
-            result = "여자";
+            result = "W";
         }
         return result;
     }
@@ -331,8 +583,6 @@ public class BaseLogin extends AppCompatActivity {
         if (Session.getCurrentSession().handleActivityResult(requestCode, resultCode, data)) {
             return;
         }
-
-
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 }
