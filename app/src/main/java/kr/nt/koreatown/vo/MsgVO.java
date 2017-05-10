@@ -7,7 +7,7 @@ package kr.nt.koreatown.vo;
 public class MsgVO {
 
     public String result;
-    public String msg;
+    public MSG data;
 
     public String getResult() {
         return result;
@@ -17,10 +17,24 @@ public class MsgVO {
         this.result = result;
     }
 
-    public String getMsg() {
-        return msg;
+    public MSG getData() {
+        return data;
     }
-    public void setMsg(String msg) {
-        this.msg = msg;
+
+    public void setData(MSG data) {
+        this.data = data;
     }
+
+    public class MSG{
+        public String msg;
+
+        public String getMsg() {
+            return msg;
+        }
+
+        public void setMsg(String msg) {
+            this.msg = msg;
+        }
+    }
+
 }

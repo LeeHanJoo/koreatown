@@ -24,7 +24,6 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/googlemap_apikey" />
@@ -54,6 +53,14 @@
             android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity android:name=".feed.StoryAct"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity android:name=".setting.SettingAct"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity android:name=".setting.MyProfileAct"
             android:windowSoftInputMode="stateAlwaysHidden"
             android:theme="@style/AppTheme.NoActionBar"/>
 

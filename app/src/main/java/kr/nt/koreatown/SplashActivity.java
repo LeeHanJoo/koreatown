@@ -22,7 +22,7 @@ public class SplashActivity extends AppCompatActivity {
 
     private boolean gps = false;
     AlertDialog GpsAlert, Gpsservice;
-
+    MyLocation mlocation = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,10 +81,10 @@ public class SplashActivity extends AppCompatActivity {
                 location2.getLocation(SplashActivity.this,locationResult);
             }else{
                 KoreaTown.myLocation = location;
+                mlocation.LocationDestory();
                 Intent intent = new Intent(SplashActivity.this,LoginAct.class);
                 startActivity(intent);
                 finish();
-
             }
         }
     };
@@ -94,8 +94,8 @@ public class SplashActivity extends AppCompatActivity {
     private void goNext(){
         //Intent intent = new Intent(SplashActivity.this,MainAct.class);
 
-        MyLocation location = new MyLocation();
-        location.getLocation(SplashActivity.this,locationResult);
+        mlocation = new MyLocation();
+        mlocation.getLocation(SplashActivity.this,locationResult);
 
       /*  Intent intent = new Intent(SplashActivity.this,LoginAct.class);
         startActivity(intent);

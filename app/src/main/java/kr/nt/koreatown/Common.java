@@ -30,4 +30,6 @@ public class Common {
     public static final String TYPE_KAKAO = "K";
 
     public static final String TYPE_OS_ANDROID = "A";
+
+    public static final String AUTO_LOGIN = "AUTOLOGIN";
 }
