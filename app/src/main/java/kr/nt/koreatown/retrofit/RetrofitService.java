@@ -1,5 +1,7 @@
 package kr.nt.koreatown.retrofit;
 
+import com.google.gson.JsonElement;
+
 import java.util.Map;
 
 import kr.nt.koreatown.vo.CommonVO;
@@ -45,11 +47,21 @@ public interface RetrofitService {
             ,@Query("PUSH_KEY") String PUSH_KEY,@Query("DEVICE_ID") String DEVICE_ID,@Query("OS_VER") String OS_VER
             , @Query("LAT") String LAT ,@Query("LON") String LON  );
 
-    @GET("/mobile/m_login")
+    @Multipart
+    @POST("/mobile/m_login")
     public Call<MsgVO> doLogin(@PartMap Map<String, RequestBody> params);
 
+    @Multipart
+    @POST("/mobile/m_login_upd")
+    public Call<MsgVO> doOnlyLogin(@PartMap Map<String, RequestBody> params);
+
+
     @GET("/mobile/m_mypage")
-    public Call<CommonVO> getMyPage(@Query("ID")  String ID);
+    public Call<JsonElement> getMyPage(@Query("ID")  String ID);
+
+    @Multipart
+    @POST("/mobile/m_mypage_upd")
+    public Call<MsgVO> updateMyPage(@PartMap Map<String, RequestBody> params);
 
     @POST("/mobile/m_mypage_upd")
     public Call<CommonVO> updateMyPage(@Query("ID") String ID, @Query("USER_NAME") String USER_NAME

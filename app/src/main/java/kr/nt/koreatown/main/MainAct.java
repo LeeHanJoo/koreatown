@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
@@ -36,15 +37,16 @@ import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 
+import kr.nt.koreatown.KoreaTown;
 import kr.nt.koreatown.Listener.MyMenuClickListener;
 import kr.nt.koreatown.R;
+import kr.nt.koreatown.bus.BusProvider;
+import kr.nt.koreatown.bus.RefreshViewEvent;
 import kr.nt.koreatown.databinding.MainactBinding;
 import kr.nt.koreatown.feed.RoomAct;
 import kr.nt.koreatown.feed.SelectAct;
 import kr.nt.koreatown.feed.StoryAct;
-import kr.nt.koreatown.bus.BusProvider;
 import kr.nt.koreatown.util.MyLocation;
-import kr.nt.koreatown.bus.RefreshViewEvent;
 import kr.nt.koreatown.util.Utils;
 import kr.nt.koreatown.view.ImagePagerAdapter;
 
@@ -77,12 +79,11 @@ public class MainAct extends AppCompatActivity implements OnMapReadyCallback{
                 this, binding.drawerLayout, binding.includeMain.toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         toggle.syncState();
         binding.includeMain.toolbar.setNavigationIcon(R.drawable.icon_menu);
-        binding.navMap.setOnClickListener(new MyMenuClickListener());
-        binding.navSetting.setOnClickListener(new MyMenuClickListener());
+        binding.navMap.setOnClickListener(new MyMenuClickListener(this));
+        binding.navSetting.setOnClickListener(new MyMenuClickListener(this));
 
        // init();
-        mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(map);
+        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(map);
         mapFragment.getMapAsync(this);
 
         marker_root_view = LayoutInflater.from(this).inflate(marker, null);
@@ -174,7 +175,7 @@ public class MainAct extends AppCompatActivity implements OnMapReadyCallback{
         @Override
         public void gotLocation(Location location) {
 
-          //  String msg = "lon: "+location.getLongitude()+" -- lat: "+location.getLatitude();
+           // String msg = "lon: "+location.getLongitude()+" -- lat: "+location.getLatitude();
            // Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
             if(location == null){
                 MyLocation location2 = new MyLocation();
@@ -199,8 +200,12 @@ public class MainAct extends AppCompatActivity implements OnMapReadyCallback{
             setUpMap();
         }
 
-        MyLocation location = new MyLocation();
-        location.getLocation(MainAct.this,locationResult);
+        if(KoreaTown.myLocation == null){
+            MyLocation location = new MyLocation();
+            location.getLocation(MainAct.this,locationResult);
+        }else{
+            drawMarker(KoreaTown.myLocation);
+        }
     }
 
     private Bitmap createDrawableFromView(Context context, View view) {
@@ -253,7 +258,15 @@ public class MainAct extends AppCompatActivity implements OnMapReadyCallback{
                 }
                 break;
         }
+    }
 
+    @Override
+    public void onBackPressed() {
+        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            binding.drawerLayout.closeDrawer(GravityCompat.START);
+        }else{
+            finish();
+        }
 
     }
 }
