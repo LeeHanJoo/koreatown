@@ -24,6 +24,11 @@ public class MyLocation {
     boolean network_enabled = false;
     String provide=null;
     Context context;
+
+    public void LocationDestory(){
+        locationResult = null;
+    }
+
     public boolean getLocation(Context context, LocationResult result) {
         this.context = context;
         //I use LocationResult callback class to pass location value from MyLocation to user code.
@@ -93,7 +98,8 @@ public class MyLocation {
     LocationListener locationListenerNetwork = new LocationListener() {
         public void onLocationChanged(Location location) {
             timer1.cancel();
-            locationResult.gotLocation(location);
+            if(locationResult != null)
+                locationResult.gotLocation(location);
             try {
 
                 lm.removeUpdates(locationListenerGps);
