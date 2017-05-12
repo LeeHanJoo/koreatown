@@ -60,6 +60,7 @@
                 </LinearLayout>
 
                 <EditText
+                    android:id="@+id/story_edit"
                     android:layout_marginTop="10dip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -77,12 +78,14 @@
                     android:layout_marginTop="10dip">
 
                     <RadioGroup
+                        android:id="@+id/radio_group"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
                         android:orientation="horizontal">
 
                         <RadioButton
+                            android:id="@+id/sticker_1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginRight="5dip"
@@ -90,6 +93,7 @@
                             android:button="@null" />
 
                         <RadioButton
+                            android:id="@+id/sticker_2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="5dip"
@@ -98,6 +102,7 @@
                             android:button="@null" />
 
                         <RadioButton
+                            android:id="@+id/sticker_3"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="5dip"
@@ -106,6 +111,7 @@
                             android:button="@null" />
 
                         <RadioButton
+                            android:id="@+id/sticker_4"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="5dip"
@@ -118,6 +124,7 @@
                 </LinearLayout>
 
                 <ImageView
+                    android:id="@+id/btn_send"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
