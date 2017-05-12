@@ -25,13 +25,9 @@ public interface RetrofitService {
     @GET("/mobile/m_ver_check")
     public Call<CommonVO> getVersion(@Query("OS_TYPE") String OS_TYPE);
 
-
-
-
     @Multipart
     @POST("/mobile/m_join")
     public Call<MsgVO> postSign(@PartMap Map<String, RequestBody> params);
-
 
 
     @Multipart
@@ -59,9 +55,21 @@ public interface RetrofitService {
     @GET("/mobile/m_mypage")
     public Call<JsonElement> getMyPage(@Query("ID")  String ID);
 
+    @GET("/mobile/m_map_list")
+    public Call<JsonElement> getMapList(@Query("LAT")  String LAT, @Query("LON")  String LON);
+
     @Multipart
     @POST("/mobile/m_mypage_upd")
     public Call<MsgVO> updateMyPage(@PartMap Map<String, RequestBody> params);
+
+    @Multipart
+    @POST("/mobile/m_story_ins")
+    public Call<MsgVO> postStory(@PartMap Map<String, RequestBody> params);
+
+    @Multipart
+    @POST("/mobile/m_room_ins")
+    public Call<MsgVO> postRoom(@PartMap Map<String, RequestBody> params);
+
 
     @POST("/mobile/m_mypage_upd")
     public Call<CommonVO> updateMyPage(@Query("ID") String ID, @Query("USER_NAME") String USER_NAME

@@ -61,6 +61,13 @@ public class SplashActivity extends AppCompatActivity {
         chkgps();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mlocation.LocationDestory();
+        locationResult = null;
+    }
+
     private void inita(){
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -81,7 +88,7 @@ public class SplashActivity extends AppCompatActivity {
                 location2.getLocation(SplashActivity.this,locationResult);
             }else{
                 KoreaTown.myLocation = location;
-                mlocation.LocationDestory();
+               // mlocation.LocationDestory();
                 Intent intent = new Intent(SplashActivity.this,LoginAct.class);
                 startActivity(intent);
                 finish();

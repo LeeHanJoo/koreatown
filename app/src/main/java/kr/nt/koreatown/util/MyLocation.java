@@ -51,6 +51,15 @@ public class MyLocation {
         if (!gps_enabled && !network_enabled)
             return false;
 
+        if (network_enabled) {
+            try {
+                lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListenerNetwork);
+            } catch (SecurityException e) {
+                Log.e("PERMISSION_EXCEPTION", "PERMISSION_NOT_GRANTED");
+            }
+            provide="network";
+        }
+
         if (gps_enabled) {
             try {
                 lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, (long)0, (float)0, locationListenerGps);
@@ -60,14 +69,6 @@ public class MyLocation {
             provide="gps";
         }
 
-        if (network_enabled) {
-            try {
-                lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListenerNetwork);
-            } catch (SecurityException e) {
-                Log.e("PERMISSION_EXCEPTION", "PERMISSION_NOT_GRANTED");
-            }
-            provide="network";
-        }
         timer1 = new Timer();
         timer1.schedule(new GetLastLocation(), 20000);
         return true;
@@ -76,6 +77,7 @@ public class MyLocation {
     LocationListener locationListenerGps = new LocationListener() {
         public void onLocationChanged(Location location) {
             timer1.cancel();
+            if(locationResult != null)
             locationResult.gotLocation(location);
 
             try {
@@ -129,15 +131,15 @@ public class MyLocation {
             }
             Location net_loc = null, gps_loc = null;
             try {
-                if (gps_enabled)
-                    gps_loc = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
                 if (network_enabled)
                     net_loc = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-
+                if (gps_enabled)
+                    gps_loc = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             } catch (SecurityException e) {
                 Log.e("PERMISSION_EXCEPTION", "PERMISSION_NOT_GRANTED");
             }
-
+            if(locationResult == null) return;
             //if there are both values use the latest one
             if (gps_loc != null && net_loc != null) {
                 if (gps_loc.getTime() > net_loc.getTime())

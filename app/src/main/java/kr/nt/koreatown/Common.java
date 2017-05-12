@@ -24,6 +24,17 @@ public class Common {
     public static final String LAT = "LAT";
     public static final String LON = "LON";
 
+    //소식
+    public static final String STICKER = "STICKER";
+    public static final String DESC = "DESC";
+    public static final String ADDR1 = "ADDR1";
+    public static final String ADDR2 = "ADDR2";
+
+    //방
+    public static final String PRICE = "PRICE";
+    public static final String TOILET = "TOILET";
+    public static final String COSTDAY = "COSTDAY";
+    public static final String ROOM = "ROOM";
 
     public static final String TYPE_FACEBOOK = "F";
     public static final String TYPE_EMAIL = "E";
