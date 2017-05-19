@@ -12,7 +12,7 @@
         <TextView
             android:id="@+id/detail_desc"
             style="@style/BaseTextView"
-            android:text="안녕하세요? 방을 좀 구하고 싶은데요.. 한 6개월 동안 머물수 있는 곳이면 좋을것 같습니다. 전화번호는 231-222-2222 입니다."
+            android:text=""
             android:textSize="15sp" />
 
         <android.support.v4.view.ViewPager
@@ -22,22 +22,24 @@
             android:layout_marginTop="20dip" />
 
         <TextView
+
+            android:id="@+id/detail_content_price"
             style="@style/BaseTextView"
-            android:text="-금액 : $800 (Mon)" />
+            android:text="" />
 
         <TextView
+            android:id="@+id/detail_content_room"
             style="@style/BaseTextView"
-            android:text="-방 : 1개" />
+            android:text="" />
+
 
         <TextView
+            android:id="@+id/detail_content_bath"
             style="@style/BaseTextView"
-            android:text="-침대 : 2개" />
-
-        <TextView
-            style="@style/BaseTextView"
-            android:text="-욕실 : 1개" />
+            android:text="" />
 
        <TextView
+           android:id="@+id/detail_content_cnt"
            android:layout_marginTop="20dip"
            android:textColor="#ffffff"
            android:layout_width="wrap_content"
@@ -46,9 +48,16 @@
 
         <android.support.v7.widget.RecyclerView
             android:layout_marginTop="10dip"
+            android:id="@+id/detail_content_recyler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
         </android.support.v7.widget.RecyclerView>
+
+        <Button
+            android:id="@+id/detail_content_cmtbtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="코멘트등록"/>
     </LinearLayout>
 </layout>

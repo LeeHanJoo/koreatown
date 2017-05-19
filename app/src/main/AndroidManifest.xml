@@ -63,7 +63,10 @@
         <activity android:name=".setting.MyProfileAct"
             android:windowSoftInputMode="stateAlwaysHidden"
             android:theme="@style/AppTheme.NoActionBar"/>
-
+        <activity
+            android:name=".feed.CommentPopup"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Dialog" />
         <activity android:name=".SplashActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>

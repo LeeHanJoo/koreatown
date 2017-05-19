@@ -8,4 +8,11 @@
         android:visible="true"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/action_close"
+        android:icon="@drawable/btn_close"
+        android:title="완료"
+        android:visible="false"
+        app:showAsAction="always" />
+
 </menu>

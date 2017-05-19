@@ -5,6 +5,7 @@
     android:orientation="vertical">
 
     <ImageView
+        android:scaleType="fitCenter"
         android:id="@+id/pager_item_img"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

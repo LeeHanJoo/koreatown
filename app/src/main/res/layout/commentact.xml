@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#333333"
+        android:orientation="vertical"
+        android:padding="20dip">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dip"
+            android:text="코멘트 등록하기"
+            android:textColor="#ffffff"
+            android:textSize="20sp" />
+
+        <EditText
+            android:padding="5dip"
+            android:gravity="left|top"
+            android:id="@+id/comm_edit"
+            android:layout_marginTop="10dip"
+            android:layout_width="match_parent"
+            android:layout_height="200dip"
+            android:background="#ffffff"/>
+
+        <ImageView
+            android:id="@+id/comm_send"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/co_write"/>
+
+    </LinearLayout>
+</layout>

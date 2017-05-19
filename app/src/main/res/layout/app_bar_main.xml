@@ -64,11 +64,22 @@
                             android:src="@drawable/icon_house_wh" />
 
                         <TextView
+                            android:id="@+id/detail_date"
                             android:layout_marginLeft="10dip"
                             android:layout_toRightOf="@id/detail_icon"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="1 hours ago (20분 후에 사라집니다.)"
+                            android:text="정보가 없습니다."
+                            android:textColor="#ffffff"
+                            android:layout_alignBottom="@id/detail_icon"/>
+
+                        <TextView
+                            android:id="@+id/detail_time"
+                            android:layout_marginLeft="5dip"
+                            android:layout_toRightOf="@id/detail_date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="정보가 없습니다."
                             android:textColor="#ffffff"
                             android:layout_alignBottom="@id/detail_icon"/>
 
@@ -93,15 +104,17 @@
                             android:orientation="vertical">
 
                             <TextView
+                                android:id="@+id/detail_room_info"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="1 room, 1 bathroom"
+                                android:text="정보가 없습니다."
                                 android:textColor="#ffffff"
                                 android:textSize="20sp"/>
                             <TextView
+                                android:id="@+id/detail_room_addr"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="238 S. Westmoreland Los Angeles, CA"
+                                android:text="정보가 없습니다."
                                 android:textColor="#ffffff"
                                 android:textSize="15sp"/>
                         </LinearLayout>
@@ -117,7 +130,8 @@
                     android:layout_below="@id/click_detail"
                     my:content="@+id/content"
                     my:direction="topToBottom"
-                    my:handle="@+id/handle">
+                    my:handle="@+id/handle"
+                    >
 
                     <include
                         android:id="@+id/content"
