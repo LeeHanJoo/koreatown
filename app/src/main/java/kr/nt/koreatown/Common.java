@@ -35,6 +35,11 @@ public class Common {
     public static final String TOILET = "TOILET";
     public static final String COSTDAY = "COSTDAY";
     public static final String ROOM = "ROOM";
+    public static final String PIC = "PIC[]";
+    // 코멘트
+    public static final String TYPE = "TYPE";
+    public static final String SEQ = "SEQ";
+    public static final String COMMENT = "COMMENT";
 
     public static final String TYPE_FACEBOOK = "F";
     public static final String TYPE_EMAIL = "E";

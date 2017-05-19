@@ -11,6 +11,9 @@ import android.util.TypedValue;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -194,4 +197,94 @@ public class Utils {
         return matcher.matches();
     }
 
+    public final static int SEC 	= 60;
+    public final static int MIN 	= 60;
+    public final static int HOUR 	= 24;
+    public final static int DAY 	= 7;
+    public final static int MONTH = 12;
+
+    /**
+     *
+     * @param dataString
+     * @return
+     */
+    public static String CreateDataWithCheck(String dataString)
+    {
+        //		java.text.SimpleDateFormat format = new java.text.SimpleDateFormat(
+        //				"yyyy-MM-dd HH:mm:ss.S");
+        java.text.SimpleDateFormat format= null;
+        if(dataString.length() != 21) {
+            format = new java.text.SimpleDateFormat(
+                    "yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+        }
+        else {
+            format = new java.text.SimpleDateFormat(
+                    "yyyy-MM-dd HH:mm:ss.S", Locale.ENGLISH);
+        }
+        java.util.Date date = null;
+        try {
+            date = format.parse(dataString);
+
+            long curTime = System.currentTimeMillis();
+            long regTime = date.getTime();
+            long diffTime = (curTime - regTime) / 1000;
+
+            String msg = null;
+            if (diffTime < SEC) {
+                // sec
+
+                SimpleDateFormat aformat = new SimpleDateFormat("aa HH:mm");
+                //msg = aformat.format(date);
+                String time = aformat.format(date);
+                String[] entime = time.split(" ");
+                String[] entime2 = entime[1].split(":");
+                if(Integer.valueOf(entime2[0]) > 12){
+                    msg =  entime[0] +" " + String.valueOf(Integer.valueOf(entime2[0]) -12) + ":" + entime2[1];
+                }else{
+                    msg = aformat.format(date);
+                }
+                msg = "방금 전";
+            } else if ((diffTime /= SEC) < MIN) {
+                // min
+                SimpleDateFormat aformat = new SimpleDateFormat("aa HH:mm");
+                //msg = aformat.format(date);
+                String time = aformat.format(date);
+                String[] entime = time.split(" ");
+                String[] entime2 = entime[1].split(":");
+                if(Integer.valueOf(entime2[0]) > 12){
+                    msg =  entime[0] +" " + String.valueOf(Integer.valueOf(entime2[0]) -12) + ":" + entime2[1];
+                }else{
+                    msg = aformat.format(date);
+                }
+                msg = diffTime + "분 전";
+            } else if ((diffTime /= MIN) < HOUR) {
+                // hour
+                SimpleDateFormat aformat = new SimpleDateFormat("aa HH:mm");
+                //msg = aformat.format(date);
+                String time = aformat.format(date);
+                String[] entime = time.split(" ");
+                String[] entime2 = entime[1].split(":");
+                if(Integer.valueOf(entime2[0]) > 12){
+                    msg =  entime[0] +" " + String.valueOf(Integer.valueOf(entime2[0]) -12) + ":" + entime2[1];
+                }else{
+                    msg = aformat.format(date);
+                }
+                msg = (diffTime) + "시간 전";
+            } else if ((diffTime /= HOUR) < DAY) {
+                // day
+                SimpleDateFormat aformat = new SimpleDateFormat("MM월dd일");
+                msg = aformat.format(date);
+
+                msg = (diffTime) + "일 전";
+            }
+            else {
+                SimpleDateFormat aformat = new SimpleDateFormat("MM월dd일");
+                msg = aformat.format(date);
+            }
+            return msg;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

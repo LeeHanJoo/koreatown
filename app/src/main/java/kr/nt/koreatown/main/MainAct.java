@@ -1,5 +1,6 @@
 package kr.nt.koreatown.main;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -8,11 +9,14 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,7 +27,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -49,8 +52,11 @@ import kr.nt.koreatown.KoreaTown;
 import kr.nt.koreatown.Listener.MyMenuClickListener;
 import kr.nt.koreatown.R;
 import kr.nt.koreatown.bus.BusProvider;
+import kr.nt.koreatown.bus.RefreshDetailViewEvent;
 import kr.nt.koreatown.bus.RefreshViewEvent;
+import kr.nt.koreatown.databinding.CommentItemBinding;
 import kr.nt.koreatown.databinding.MainactBinding;
+import kr.nt.koreatown.feed.CommentPopup;
 import kr.nt.koreatown.feed.RoomAct;
 import kr.nt.koreatown.feed.SelectAct;
 import kr.nt.koreatown.feed.StoryAct;
@@ -58,7 +64,9 @@ import kr.nt.koreatown.retrofit.RetrofitAdapter;
 import kr.nt.koreatown.util.MyLocation;
 import kr.nt.koreatown.util.Utils;
 import kr.nt.koreatown.view.ImagePagerAdapter;
+import kr.nt.koreatown.view.MultiDirectionSlidingDrawer;
 import kr.nt.koreatown.vo.FeedVO;
+import kr.nt.koreatown.vo.RoomVO;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -81,6 +89,7 @@ public class MainAct extends AppCompatActivity implements OnMapReadyCallback{
     public Menu menu;
     private boolean moveStart = false;
     FeedVO Item = null;
+    private Marker mClickMarker = null;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,22 +106,15 @@ public class MainAct extends AppCompatActivity implements OnMapReadyCallback{
         binding.navMap.setOnClickListener(new MyMenuClickListener(this));
         binding.navSetting.setOnClickListener(new MyMenuClickListener(this));
 
-       // init();
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(map);
         mapFragment.getMapAsync(this);
 
         marker_root_view = LayoutInflater.from(this).inflate(marker, null);
-        init();
+       // init();
         BusProvider.getInstance().register(this);
 
     }
 
-    private void init(){
-        ImagePagerAdapter adapter = new ImagePagerAdapter(getLayoutInflater(),new ArrayList<String>());
-        binding.includeMain.content.pager.setPageMargin(getResources().getDisplayMetrics().widthPixels / -5);
-        binding.includeMain.content.pager.setOffscreenPageLimit(2);
-        binding.includeMain.content.pager.setAdapter(adapter);
-    }
 
     @Override
     protected void onDestroy() {
@@ -123,26 +125,46 @@ public class MainAct extends AppCompatActivity implements OnMapReadyCallback{
     private void setUpMap(){
         gMap.setOnMarkerClickListener(markerClick);
         gMap.setOnMapClickListener(mapClick);
+        binding.includeMain.drawer.setOnDrawerScrollListener(new MultiDirectionSlidingDrawer.OnDrawerScrollListener() {
+            @Override
+            public void onScrollStarted() {
+
+            }
+
+            @Override
+            public void onScrollEnded() {
+                if(binding.includeMain.drawer.isOpened()){
+                    binding.includeMain.drawer.setClickable(false);
+                }else{
+                    binding.includeMain.drawer.setClickable(true);
+                }
+            }
+        });
         gMap.setOnCameraIdleListener(idleListener);
-        gMap.setOnCameraMoveStartedListener(moveStartCallback);
+        //gMap.setOnCameraMoveStartedListener(moveStartCallback);
 
     }
 
     @Subscribe
     public void refreshView(RefreshViewEvent event){
-        Toast.makeText(this, "리프레쉬뷰 버스 들어옴", Toast.LENGTH_SHORT).show();
+        String LAT = String.valueOf(KoreaTown.myLocation.getLatitude());
+        String LON = String.valueOf(KoreaTown.myLocation.getLongitude());
+        getList(LAT,LON);
+        //Toast.makeText(this, "리프레쉬뷰 버스 들어옴", Toast.LENGTH_SHORT).show();
+    }
+
+
+    @Subscribe
+    public void refreshDetailView(RefreshDetailViewEvent event){
+        getDetail(true);
+        //Toast.makeText(this, "리프레쉬뷰 버스 들어옴", Toast.LENGTH_SHORT).show();
     }
 
     GoogleMap.OnCameraMoveStartedListener moveStartCallback = new GoogleMap.OnCameraMoveStartedListener() {
         @Override
         public void onCameraMoveStarted(int i) {
             if(markerClickFlag){ //마커가 클릭되있는상태
-                binding.includeMain.detailView.setVisibility(View.GONE);
-                Animation alphaAni = AnimationUtils.loadAnimation(MainAct.this, R.anim.slide_out_top);
-                binding.includeMain.detailView.setAnimation(alphaAni);
-
-                binding.includeMain.toolbar.setBackgroundColor(Utils.getColor(MainAct.this,R.color.colorPrimary));
-                overlay.remove();
+                hideMarkerDetail();
                 markerClickFlag =! markerClickFlag;
                 setUI(Item);
                 return;
@@ -154,7 +176,7 @@ public class MainAct extends AppCompatActivity implements OnMapReadyCallback{
     GoogleMap.OnCameraIdleListener idleListener = new GoogleMap.OnCameraIdleListener() {
         @Override
         public void onCameraIdle() {
-            if(moveStart && !markerClickFlag){
+            if(!markerClickFlag){
                 moveStart = false;
                 CameraPosition position = gMap.getCameraPosition();
                 LatLng center = position.target;
@@ -162,7 +184,7 @@ public class MainAct extends AppCompatActivity implements OnMapReadyCallback{
                 String LON = String.valueOf(center.longitude);
                 getList(LAT,LON);
             }
-            moveStart = false;
+          //  moveStart = false;
         }
     };
 
@@ -185,53 +207,161 @@ public class MainAct extends AppCompatActivity implements OnMapReadyCallback{
         @Override
         public void onMapClick(LatLng latLng) {
             if(markerClickFlag){
-                binding.includeMain.detailView.setVisibility(View.GONE);
-                Animation alphaAni = AnimationUtils.loadAnimation(MainAct.this, R.anim.slide_out_top);
-                binding.includeMain.detailView.setAnimation(alphaAni);
-                binding.includeMain.toolbar.setBackgroundColor(Utils.getColor(MainAct.this,R.color.colorPrimary));
-                overlay.remove();
+                hideMarkerDetail();
                 markerClickFlag =! markerClickFlag;
                 setUI(Item);
             }
         }
     };
 
+    public void hideMarkerDetail(){
+        menu.findItem(R.id.action_add).setVisible(true);
+        menu.findItem(R.id.action_close).setVisible(false);
+        binding.includeMain.detailView.setVisibility(View.GONE);
+        Animation alphaAni = AnimationUtils.loadAnimation(MainAct.this, R.anim.slide_out_top);
+        binding.includeMain.detailView.setAnimation(alphaAni);
+        binding.includeMain.toolbar.setBackgroundColor(Utils.getColor(MainAct.this,R.color.colorPrimary));
+        overlay.remove();
+        setUI(Item);
+    }
+
     GoogleMap.OnMarkerClickListener markerClick = new GoogleMap.OnMarkerClickListener() {
         @Override
         public boolean onMarkerClick(Marker marker) {
-            CameraUpdate center = CameraUpdateFactory.newLatLng(marker.getPosition());
+            mClickMarker = marker;
             if(markerClickFlag){ //마커가 클릭되있는상태
                // markerClickFlag = false;
-                binding.includeMain.detailView.setVisibility(View.GONE);
-                Animation alphaAni = AnimationUtils.loadAnimation(MainAct.this, R.anim.slide_out_top);
-                binding.includeMain.detailView.setAnimation(alphaAni);
-                binding.includeMain.toolbar.setBackgroundColor(Utils.getColor(MainAct.this,R.color.colorPrimary));
-                overlay.remove();
-
+                hideMarkerDetail();
                 setUI(Item);
             }else{ // 마커 클릭상태가 아닐때
                // markerClickFlag = true;
-                gMap.clear();
-                binding.includeMain.detailView.setVisibility(View.VISIBLE);
-                binding.includeMain.drawer.close();
-                Animation alphaAni = AnimationUtils.loadAnimation(MainAct.this, R.anim.slide_in_top);
-                binding.includeMain.detailView.setAnimation(alphaAni);
-                binding.includeMain.toolbar.setBackgroundColor(Utils.getColor(MainAct.this,R.color.colorToolbar));
-                addOverLayView(marker);
-                gMap.animateCamera(center);
+                getDetail(false);
             }
-
             markerClickFlag =! markerClickFlag;
 
             return true;
         }
     };
 
+    public void getDetail(boolean flag){
+        String itemJson = mClickMarker.getTitle();
+        String gubun = "";
+        String seq = "";
+        try {
+            JSONObject obj = new JSONObject(itemJson);
+            gubun = obj.getString("GUBUN");
+            seq = obj.getString("SEQ");
+        }catch(Exception e){
+            e.printStackTrace();
+        }
 
-    public void addOverLayView(Marker marker){
+        if(gubun.equals("R")){
+            getRoomDetail(seq,flag);
+        }else if(gubun.equals("S")){
+
+        }
+    }
+
+    private void getRoomDetail(String seq,final boolean flag){
+        Call<JsonElement> call = RetrofitAdapter.getInstance().getRoomDetail(seq);
+        call.enqueue(new Callback<JsonElement>() {
+            @Override
+            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+                JsonElement json = response.body();
+                if (json != null) {
+                    Gson gson = new Gson();
+                    String result = json.getAsJsonObject().get("result").getAsString();
+                    if (result.equals("1")) {
+                        RoomVO item =  gson.fromJson(json, RoomVO.class);
+                        setDetailUI(item);
+                        if(flag) return;
+                        setMapDetailUI();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonElement> call, Throwable t) {
+                Log.e("","");
+            }
+        });
+    }
+
+    public void setDetailUI(final RoomVO roomVO){
+        binding.includeMain.detailDate.setText(Utils.CreateDataWithCheck(roomVO.getData().getCREATE_DATE()));
+        binding.includeMain.detailTime.setText(getTimeLimit(roomVO.getData().getTIME_MINUTE()));
+        binding.includeMain.detailRoomInfo.setText(String.format("%s room , %s bathroom",roomVO.getData().getRM_ROOM(),roomVO.getData().getRM_TOILET()));
+        binding.includeMain.detailRoomAddr.setText(String.format("%s , %s",roomVO.getData().getRM_ADDR2(),roomVO.getData().getRM_ADDR1()));
+        binding.includeMain.content.detailDesc.setText(roomVO.getData().getRM_DESC());
+
+        if(roomVO.getData().getFILE_LIST() != null && roomVO.getData().getFILE_LIST().size() > 0){
+            binding.includeMain.content.pager.setVisibility(View.VISIBLE);
+            ImagePagerAdapter adapter = new ImagePagerAdapter(MainAct.this,getLayoutInflater(),roomVO.getData().getFILE_LIST());
+            binding.includeMain.content.pager.setPageMargin(getResources().getDisplayMetrics().widthPixels / -5);
+            binding.includeMain.content.pager.setOffscreenPageLimit(2);
+            binding.includeMain.content.pager.setAdapter(adapter);
+        }else{
+            binding.includeMain.content.pager.setVisibility(View.GONE);
+        }
+
+
+        binding.includeMain.content.detailContentPrice.setText(String.format("-금액 : $%s (Mon)",roomVO.getData().getRM_PRICE()));
+        binding.includeMain.content.detailContentRoom.setText(String.format("-방 : %s개",roomVO.getData().getRM_ROOM()));
+        binding.includeMain.content.detailContentBath.setText(String.format("-욕실 : %s개",roomVO.getData().getRM_TOILET()));
+        binding.includeMain.content.detailContentCnt.setText(String.format("Comment (%d)",roomVO.getData().getCOMMENT_LIST().size()));
+
+        if(roomVO.getData().getCOMMENT_LIST() != null && roomVO.getData().getCOMMENT_LIST().size() > 0){
+            binding.includeMain.content.detailContentRecyler.setVisibility(View.VISIBLE);
+            LinearLayoutManager manager = new LinearLayoutManager(this);
+            binding.includeMain.content.detailContentRecyler.setHasFixedSize(true);
+            binding.includeMain.content.detailContentRecyler.setLayoutManager(manager);
+            binding.includeMain.content.detailContentRecyler.setAdapter(new RecyclerAdapter(this, roomVO.getData().getCOMMENT_LIST(), R.layout.mainact));
+        }else{
+            binding.includeMain.content.detailContentRecyler.setVisibility(View.GONE);
+        }
+
+        binding.includeMain.content.detailContentCmtbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainAct.this, CommentPopup.class);
+                intent.putExtra(CommentPopup.GUBUN,"R");
+                intent.putExtra(CommentPopup.SEQ,roomVO.getData().getRM_SEQ());
+                startActivity(intent);
+            }
+        });
+
+    }
+
+    private void setMapDetailUI(){
+        CameraUpdate center = CameraUpdateFactory.newLatLng(mClickMarker.getPosition());
+        gMap.clear();
+        binding.includeMain.detailView.setVisibility(View.VISIBLE);
+        binding.includeMain.drawer.close();
+
+        menu.findItem(R.id.action_add).setVisible(false);
+        menu.findItem(R.id.action_close).setVisible(true);
+        Animation alphaAni = AnimationUtils.loadAnimation(MainAct.this, R.anim.slide_in_top);
+        binding.includeMain.detailView.setAnimation(alphaAni);
+        binding.includeMain.toolbar.setBackgroundColor(Utils.getColor(MainAct.this,R.color.colorToolbar));
+        addOverLayView();
+        gMap.animateCamera(center);
+    }
+    public String getTimeLimit(String time){
+        int limitTime = Integer.valueOf(time);
+        if(limitTime > 60){
+            int timeHour = limitTime / 60 ;
+            int timeMinute = limitTime % 60;
+            return String.format("%d시간 %d분 후에 사라집니다.",timeHour,timeMinute);
+        } else {
+            return String.format("%d분 후에 사라집니다.",limitTime);
+        }
+
+    }
+
+    public void addOverLayView(){
         Bitmap bitmap =  Bitmap.createBitmap(100,100,Bitmap.Config.ARGB_8888);
         bitmap.eraseColor(Color.parseColor("#66000000"));
-        String itemJson = marker.getTitle();
+        String itemJson = mClickMarker.getTitle();
         String gubun = "";
         String cnt = "";
         try {
@@ -243,9 +373,9 @@ public class MainAct extends AppCompatActivity implements OnMapReadyCallback{
             e.printStackTrace();
         }
 
-        gMap.addMarker(new MarkerOptions().position(marker.getPosition()).icon(BitmapDescriptorFactory.fromBitmap(createDrawableFromView(this, marker_root_view,gubun,cnt))));
-        overlay = gMap.addGroundOverlay(new GroundOverlayOptions().image(BitmapDescriptorFactory.fromBitmap(bitmap)).position(marker.getPosition(),8600f, 6500f));
-        CameraUpdate cu = CameraUpdateFactory.newLatLngZoom(marker.getPosition(), (float)18.0);
+        gMap.addMarker(new MarkerOptions().position(mClickMarker.getPosition()).icon(BitmapDescriptorFactory.fromBitmap(createDrawableFromView(this, marker_root_view,gubun,cnt))));
+        overlay = gMap.addGroundOverlay(new GroundOverlayOptions().image(BitmapDescriptorFactory.fromBitmap(bitmap)).position(mClickMarker.getPosition(),8600f, 6500f));
+        CameraUpdate cu = CameraUpdateFactory.newLatLngZoom(mClickMarker.getPosition(), (float)18.0);
         gMap.moveCamera(cu);
     }
 
@@ -281,6 +411,7 @@ public class MainAct extends AppCompatActivity implements OnMapReadyCallback{
     private String getJsonObjectItem(FeedVO.Feed item){
         JSONObject obj = new JSONObject();
         try {
+            obj.put("SEQ",item.getSEQ());
             obj.put("GUBUN",item.getGUBUN());
             obj.put("MEMBER_ID",item.getMEMBER_ID());
             obj.put("LAT",item.getLAT());
@@ -308,7 +439,7 @@ public class MainAct extends AppCompatActivity implements OnMapReadyCallback{
             String LAT = String.valueOf(KoreaTown.myLocation.getLatitude());
             String LON = String.valueOf(KoreaTown.myLocation.getLongitude());
             LatLng latlng = new LatLng(KoreaTown.myLocation.getLatitude(),KoreaTown.myLocation.getLongitude());
-            CameraUpdate cu = CameraUpdateFactory.newLatLngZoom(latlng, (float)14.0);
+            CameraUpdate cu = CameraUpdateFactory.newLatLngZoom(latlng, (float)15.0);
             gMap.moveCamera(cu);
             getList(LAT,LON);
         }
@@ -395,6 +526,10 @@ public class MainAct extends AppCompatActivity implements OnMapReadyCallback{
                 Intent intent = new Intent(MainAct.this, SelectAct.class);
                 startActivityForResult(intent,5502);
                 break;
+            case R.id.action_close:
+                hideMarkerDetail();
+                markerClickFlag =! markerClickFlag;
+                break;
         }
         return super.onOptionsItemSelected(item);
 
@@ -426,6 +561,54 @@ public class MainAct extends AppCompatActivity implements OnMapReadyCallback{
         }else{
             finish();
         }
-
     }
+
+
+    public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
+        Context context;
+        ArrayList<RoomVO.Room.Comment> items;
+        int item_layout;
+        public RecyclerAdapter(Context context, ArrayList<RoomVO.Room.Comment> items, int item_layout) {
+            this.context=context;
+            this.items=items;
+            this.item_layout=item_layout;
+        }
+
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View v= LayoutInflater.from(parent.getContext()).inflate(R.layout.comment_item, null);
+            return new ViewHolder(v);
+        }
+
+        @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+        @Override
+        public void onBindViewHolder(final ViewHolder holder,final int position) {
+            RoomVO.Room.Comment item = items.get(position);
+            holder.itemBinding.itemComment.setText(item.getCOMM_TEXT());
+            holder.itemBinding.itemCreateId.setText(item.getMEMBER_ID());
+            holder.itemBinding.itemDate.setText(item.getCREATE_DATE());
+
+        }
+
+
+
+        @Override
+        public int getItemCount() {
+            return this.items.size();
+        }
+
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+
+            CommentItemBinding itemBinding = null;
+
+            public ViewHolder(View itemView) {
+                super(itemView);
+
+                itemBinding = DataBindingUtil.bind(itemView);
+
+            }
+        }
+    }
+
 }

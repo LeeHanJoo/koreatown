@@ -2,6 +2,7 @@ package kr.nt.koreatown.retrofit;
 
 import com.google.gson.JsonElement;
 
+import java.util.List;
 import java.util.Map;
 
 import kr.nt.koreatown.vo.CommonVO;
@@ -62,9 +63,21 @@ public interface RetrofitService {
     @POST("/mobile/m_mypage_upd")
     public Call<MsgVO> updateMyPage(@PartMap Map<String, RequestBody> params);
 
+
     @Multipart
     @POST("/mobile/m_story_ins")
     public Call<MsgVO> postStory(@PartMap Map<String, RequestBody> params);
+
+    @Multipart
+    @POST("/mobile/m_room_ins")
+    public Call<MsgVO> postRoom(@PartMap Map<String, RequestBody> params,@Part List<MultipartBody.Part> PIC);
+
+    @GET("/mobile/m_room_detail")
+    public Call<JsonElement> getRoomDetail(@Query("SEQ")  String SEQ);
+
+    @Multipart
+    @POST("/mobile/m_comment_ins")
+    public Call<MsgVO> postComment(@PartMap Map<String, RequestBody> params);
 
     @Multipart
     @POST("/mobile/m_room_ins")

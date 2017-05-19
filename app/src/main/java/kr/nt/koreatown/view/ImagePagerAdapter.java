@@ -1,14 +1,18 @@
 package kr.nt.koreatown.view;
 
+import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 
 import kr.nt.koreatown.R;
+import kr.nt.koreatown.vo.RoomVO;
 
 /**
  * Created by user on 2017-04-20.
@@ -16,10 +20,12 @@ import kr.nt.koreatown.R;
 public class ImagePagerAdapter extends PagerAdapter {
 
     LayoutInflater inflater;
-    ArrayList<String> imageArray = null;
-    public ImagePagerAdapter(LayoutInflater inflater,ArrayList<String> imageArray) {
+    ArrayList<RoomVO.Room.FILE> imageArray = null;
+    Context context;
+    public ImagePagerAdapter(Context context, LayoutInflater inflater, ArrayList<RoomVO.Room.FILE> imageArray) {
         // TODO Auto-generated constructor stub
         //전달 받은 LayoutInflater를 멤버변수로 전달
+        this.context = context;
         this.inflater=inflater;
         this.imageArray = imageArray;
     }
@@ -29,7 +35,7 @@ public class ImagePagerAdapter extends PagerAdapter {
     @Override
     public int getCount() {
         // TODO Auto-generated method stub
-        return 5; //이미지 개수 리턴(그림이 10개라서 10을 리턴)
+        return imageArray.size(); //이미지 개수 리턴(그림이 10개라서 10을 리턴)
     }
 
 
@@ -41,9 +47,11 @@ public class ImagePagerAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         // TODO Auto-generated method stub
+        RoomVO.Room.FILE item = imageArray.get(position);
         View view = inflater.inflate(R.layout.pager_itemview, null);
         ImageView img= (ImageView)view.findViewById(R.id.pager_item_img);
-        img.setImageResource(R.drawable.icon_menu);
+       // img.setImageResource(R.drawable.icon_menu);
+        Glide.with(context).load(item.getURL()).into(img);
         container.addView(view);
         return view;
     }

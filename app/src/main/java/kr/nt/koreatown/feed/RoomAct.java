@@ -20,7 +20,10 @@ import com.bumptech.glide.Glide;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import gun0912.tedbottompicker.TedBottomPicker;
@@ -36,6 +39,7 @@ import kr.nt.koreatown.util.CommonUtil;
 import kr.nt.koreatown.util.SharedManager;
 import kr.nt.koreatown.util.Utils;
 import kr.nt.koreatown.vo.MsgVO;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -51,6 +55,7 @@ public class RoomAct extends AppCompatActivity implements View.OnClickListener{
 
     private RoomactBinding binding = null;
     private int mRoom = 0 , mBath = 0;
+    private ArrayList<String> fileArr = new ArrayList<>();
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -193,8 +198,10 @@ public class RoomAct extends AppCompatActivity implements View.OnClickListener{
                         ImageView imageview = new ImageView(RoomAct.this);
                         imageview.setScaleType(ImageView.ScaleType.FIT_XY);
                         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(Utils.toPixel(RoomAct.this,80),Utils.toPixel(RoomAct.this,80));
-                        params.rightMargin = Utils.toPixel(RoomAct.this,10);
+                        params.rightMargin = Utils.toPixel(RoomAct.this,5);
                         imageview.setLayoutParams(params);
+                        String path = uri.getPath();
+                        fileArr.add(path);
                         Glide.with(RoomAct.this).load("file://" + uri).into(imageview);
                         binding.addimagelayout.addView(imageview,0);
                         //binding.addimagelayout.addView(imageview);
@@ -222,16 +229,27 @@ public class RoomAct extends AppCompatActivity implements View.OnClickListener{
         params.put(Common.ADDR2, RetrofitUtil.toRequestBody(addr2));
         params.put(Common.COSTDAY, RetrofitUtil.toRequestBody("24"));
 
-        Call<MsgVO> call = RetrofitAdapter.getInstance().postRoom(params);
-        call.enqueue(new Callback<MsgVO>() {
+        List<MultipartBody.Part> photos = new ArrayList<>();
+        if(fileArr.size() > 0){
+            for(int i = 0 ; i < fileArr.size(); i++){
+                File file = new File(fileArr.get(i));
+                MultipartBody.Part body = RetrofitUtil.toRequestMultoPartBody(Common.PIC,file);
+                photos.add(body);
+            }
+        }
+
+
+        Call<MsgVO> call2 = RetrofitAdapter.getInstance().postRoom(params,photos);
+        call2.enqueue(new Callback<MsgVO>() {
             @Override
             public void onResponse(Call<MsgVO> call, retrofit2.Response<MsgVO> response) {
                 MsgVO item = response.body();
                 if(item != null && item.getResult().equals("1")){
-                    BusProvider.getInstance().post(new RefreshViewEvent());
+                   // BusProvider.getInstance().post(new RefreshViewEvent());
                     CommonUtil.showOnBtnDialog(RoomAct.this, "방등록", "방등록이 완료되었습니다.", new CommonUtil.onDialogClick() {
                         @Override
                         public void setonConfirm() {
+                            BusProvider.getInstance().post(new RefreshViewEvent());
                             finish();
                         }
 
@@ -246,10 +264,13 @@ public class RoomAct extends AppCompatActivity implements View.OnClickListener{
 
             @Override
             public void onFailure(Call<MsgVO> call, Throwable t) {
-
+                t.printStackTrace();
             }
         });
     }
+
+
+
     private class SendRoomTask extends AsyncTask<Void,Void,Void> {
 
         private String price ;
