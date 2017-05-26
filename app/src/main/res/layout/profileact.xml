@@ -49,20 +49,13 @@
                 android:id="@+id/myinfo_layout"
                 style="@style/ProfileLayout">
 
-                <EditText
-                    android:id="@+id/profile_type"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:text='@{"(" + user.MEMBER_TYPE + ")" }' />
 
                 <EditText
                     android:layout_marginRight="3dip"
-                    android:layout_toLeftOf="@id/profile_type"
                     android:id="@+id/profile_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:text="@{user.MEMBER_NICK}" />
 
@@ -111,9 +104,17 @@
                 style="@style/ProfileLayout">
 
                 <TextView
+                    android:id="@+id/profile_type"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:text='@{"(" + user.MEMBER_TYPE + ")" }' />
+
+                <TextView
+                    android:layout_toLeftOf="@id/profile_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:text="@{user.MEMBER_ID}"/>
 
