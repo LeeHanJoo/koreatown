@@ -233,7 +233,7 @@ public class RoomAct extends AppCompatActivity implements View.OnClickListener{
         if(fileArr.size() > 0){
             for(int i = 0 ; i < fileArr.size(); i++){
                 File file = new File(fileArr.get(i));
-                MultipartBody.Part body = RetrofitUtil.toRequestMultoPartBody(Common.PIC,file);
+                MultipartBody.Part body = RetrofitUtil.toRequestMultoPartBody(Common.PIC_ARR,file);
                 photos.add(body);
             }
         }
@@ -323,4 +323,14 @@ public class RoomAct extends AppCompatActivity implements View.OnClickListener{
             return null;
         }
     }
+
+    public boolean onOptionsItemSelected(android.view.MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // NavUtils.navigateUpFromSameTask(this);
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    };
 }

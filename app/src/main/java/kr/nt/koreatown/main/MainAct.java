@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -46,8 +47,11 @@ import com.squareup.otto.Subscribe;
 
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 
+import gun0912.tedbottompicker.TedBottomPicker;
+import kr.nt.koreatown.Common;
 import kr.nt.koreatown.KoreaTown;
 import kr.nt.koreatown.Listener.MyMenuClickListener;
 import kr.nt.koreatown.R;
@@ -61,12 +65,18 @@ import kr.nt.koreatown.feed.RoomAct;
 import kr.nt.koreatown.feed.SelectAct;
 import kr.nt.koreatown.feed.StoryAct;
 import kr.nt.koreatown.retrofit.RetrofitAdapter;
+import kr.nt.koreatown.retrofit.RetrofitUtil;
+import kr.nt.koreatown.util.CommonUtil;
 import kr.nt.koreatown.util.MyLocation;
+import kr.nt.koreatown.util.SharedManager;
 import kr.nt.koreatown.util.Utils;
 import kr.nt.koreatown.view.ImagePagerAdapter;
 import kr.nt.koreatown.view.MultiDirectionSlidingDrawer;
 import kr.nt.koreatown.vo.FeedVO;
+import kr.nt.koreatown.vo.MemberVO;
+import kr.nt.koreatown.vo.MsgVO;
 import kr.nt.koreatown.vo.RoomVO;
+import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -112,9 +122,90 @@ public class MainAct extends AppCompatActivity implements OnMapReadyCallback{
         marker_root_view = LayoutInflater.from(this).inflate(marker, null);
        // init();
         BusProvider.getInstance().register(this);
+        getProfile();
 
     }
 
+    private void setUIMenu(){
+        binding.profileImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CommonUtil.showTwoBtnDialog(MainAct.this, "프로필변경", "프로필 이미지를 변경하시겠습니까?", new CommonUtil.onDialogClick() {
+                    @Override
+                    public void setonConfirm() {
+                        TedBottomPicker bottomSheetDialogFragment = new TedBottomPicker.Builder(MainAct.this)
+                                .setOnImageSelectedListener(new TedBottomPicker.OnImageSelectedListener() {
+                                    @Override
+                                    public void onImageSelected(Uri uri) {
+                                        // uri 활용
+                                        String path = uri.getPath();
+                                        updateImage(path);
+                                    }
+                                }).setMaxCount(1000)
+                                .create();
+
+                        bottomSheetDialogFragment.show(getSupportFragmentManager());
+                    }
+
+                    @Override
+                    public void setonCancel() {
+
+                    }
+                });
+            }
+        });
+
+        String ID = SharedManager.getInstance().getString(this, Common.ID);
+        CommonUtil.setGlideImage(MainAct.this,Common.BASEFILEURL + ID+".jpg",binding.profileImg);
+    }
+
+    private void getProfile(){
+        String userID = SharedManager.getInstance().getString(this, Common.ID);
+        Call<JsonElement> call = RetrofitAdapter.getInstance().getMyPage(userID);
+        call.enqueue(new Callback<JsonElement>() {
+            @Override
+            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+                JsonElement json = response.body();
+                if (json != null) {
+                    Gson gson = new Gson();
+                    String result = json.getAsJsonObject().get("result").getAsString();
+                    if (result.equals("1")) {
+                        MemberVO Item =  gson.fromJson(json.getAsJsonObject().get("data").getAsJsonObject(), MemberVO.class);
+                        setUIMenu();
+                        binding.memberId.setText(Item.getMEMBER_NICK());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonElement> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void updateImage(String path){
+        final String ID = SharedManager.getInstance().getString(this, Common.ID);
+
+        File file = new File(path);
+        MultipartBody.Part body = RetrofitUtil.toRequestMultoPartBody(Common.PIC,file);
+        Call<MsgVO> call = RetrofitAdapter.getInstance().updateProfileImage(ID,body);
+        call.enqueue(new Callback<MsgVO>() {
+            @Override
+            public void onResponse(Call<MsgVO> call, retrofit2.Response<MsgVO> response) {
+                MsgVO item = response.body();
+                if(item != null && item.getResult().equals("1")){
+                    // BusProvider.getInstance().post(new RefreshViewEvent());
+                   CommonUtil.setGlideImage(MainAct.this,Common.BASEFILEURL + ID+".jpg",binding.profileImg);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MsgVO> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
 
     @Override
     protected void onDestroy() {

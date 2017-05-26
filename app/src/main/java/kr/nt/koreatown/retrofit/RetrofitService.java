@@ -80,6 +80,10 @@ public interface RetrofitService {
     public Call<MsgVO> postComment(@PartMap Map<String, RequestBody> params);
 
     @Multipart
+    @POST("/mobile/m_profile_upd ")
+    public Call<MsgVO> updateProfileImage(@Query("ID") String ID,@Part MultipartBody.Part PIC);
+
+    @Multipart
     @POST("/mobile/m_room_ins")
     public Call<MsgVO> postRoom(@PartMap Map<String, RequestBody> params);
 

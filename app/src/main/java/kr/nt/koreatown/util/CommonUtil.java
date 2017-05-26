@@ -24,7 +24,11 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,6 +46,9 @@ import java.util.Date;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import jp.wasabeef.glide.transformations.CropCircleTransformation;
+import kr.nt.koreatown.R;
 
 public class CommonUtil {
 
@@ -586,5 +593,12 @@ public class CommonUtil {
 
 		return true;
 	}
+
+
+
+	public static void setGlideImage(Context context,String fileUrl,ImageView view){
+		Glide.with(context).load(fileUrl).placeholder(R.drawable.btn_people).diskCacheStrategy(DiskCacheStrategy.ALL).bitmapTransform(new CropCircleTransformation(context)).into(view);
+	}
+
 
 }

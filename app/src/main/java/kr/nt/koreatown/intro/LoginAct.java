@@ -90,6 +90,9 @@ public class LoginAct extends BaseLogin {
             String ID = SharedManager.getInstance().getString(this, Common.ID);
             String PASS = SharedManager.getInstance().getString(this, Common.PASSWORD);
             String TYPE = SharedManager.getInstance().getString(this, Common.MEMBER_TYPE);
+
+            binding.inputId.setText(ID);
+            binding.inputPw.setText(PASS);
             doLogin(ID,PASS,TYPE);
         }
     }

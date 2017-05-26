@@ -512,52 +512,6 @@ public class BaseLogin extends AppCompatActivity {
 
             }
         });
-
-        /*Call<MemberVO> call = RetrofitAdapter.getInstance().doLogin(id, Common.OS_TYPE, pushkey, pw, deviceId);
-        call.enqueue(new Callback<MemberVO>() {
-            @Override
-            public void onResponse(Call<MemberVO> call, Response<MemberVO> response) {
-                MemberVO item = response.body();
-                if(item == null || item.getResult() == null){
-                    CommonUtil.showOnBtnDialog(BaseLogin.this,"서버오류","잠시후 다시시도해주세요",null);
-                }else{
-                    if(item.getResult().equals("1")) { // 로그인 성공
-                        SharedManager.getInstance().setString(BaseLogin.this,Common.USER_ID,id);
-                        SharedManager.getInstance().setString(BaseLogin.this,Common.USER_PW,pw);
-                        SharedManager.getInstance().setString(BaseLogin.this, Common.APP_LOGINTYPE, loginType);
-                        SharedManager.getInstance().setBoolean(BaseLogin.this, Common.AUTOLOGIN, true);
-                        Intent intent = new Intent(BaseLogin.this, MainActivity.class);
-                        intent.putExtra("PUSHYN", getIntent().getBooleanExtra("PUSHYN", false));
-                        intent.putExtra("PUSHITEM", getIntent().getParcelableExtra("PUSHITEM"));
-                        startActivity(intent);
-                        finish();
-                    }else{
-                        if(item.getResult().equals("2") ||item.getResult().equals("3") ){
-                            CommonUtil.showTwoBtnDialog(BaseLogin.this, "로그인", item.getData().getMsg() + "\n 계속 진행하시겠습니까?", new CommonUtil.onDialogClick() {
-                                @Override
-                                public void setonConfirm() {
-                                    goLogin(id,pw,pushkey,deviceId,loginType);
-                                }
-
-                                @Override
-                                public void setonCancel() {
-
-                                }
-                            });
-
-                        }else{
-                            CommonUtil.showOnBtnDialog(BaseLogin.this,"로그인",item.getData().getMsg(),null);
-                        }
-
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<MemberVO> call, Throwable t) {
-                CommonUtil.showOnBtnDialog(BaseLogin.this,"서버오류", "잠시후 다시시도해주세요",null);
-            }
-        });*/
     }
 
     public String getGender(String gender){

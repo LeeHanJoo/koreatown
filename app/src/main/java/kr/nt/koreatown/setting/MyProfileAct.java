@@ -33,6 +33,7 @@ public class MyProfileAct extends AppCompatActivity {
 
     private ProfileactBinding binding = null;
     public Menu menu;
+    public MemberVO Item = null;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +64,7 @@ public class MyProfileAct extends AppCompatActivity {
                     Gson gson = new Gson();
                     String result = json.getAsJsonObject().get("result").getAsString();
                     if (result.equals("1")) {
-                        MemberVO Item =  gson.fromJson(json.getAsJsonObject().get("data").getAsJsonObject(), MemberVO.class);
+                        Item =  gson.fromJson(json.getAsJsonObject().get("data").getAsJsonObject(), MemberVO.class);
                         setUI(Item);
                     }
                 }
@@ -84,10 +85,11 @@ public class MyProfileAct extends AppCompatActivity {
         String ID = SharedManager.getInstance().getString(this, Common.ID);
         Map<String, RequestBody> params = new HashMap<String, RequestBody>();
         params.put(Common.ID, RetrofitUtil.toRequestBody(ID));
-        params.put("USER_NAME",RetrofitUtil.toRequestBody(binding.profileName.getText().toString().trim()));
+        params.put(Common.SEQ, RetrofitUtil.toRequestBody(Item.getMEMBER_SEQ()));
+        params.put(Common.NICK_NAME,RetrofitUtil.toRequestBody(binding.profileName.getText().toString().trim()));
         params.put(Common.EMAIL,RetrofitUtil.toRequestBody(binding.profileEmail.getText().toString().trim()));
         params.put(Common.BIRTHDAY,RetrofitUtil.toRequestBody(binding.profileBirth.getText().toString().trim()));
-        params.put(Common.SEX,RetrofitUtil.toRequestBody(getSexConvert(binding.profileSex.getText().toString().trim())));
+        params.put(Common.SEX,RetrofitUtil.toRequestBody(binding.profileSex.getText().toString().trim()));
        // params.put(Common.LON,RetrofitUtil.toRequestBody(String.valueOf(KoreaTown.myLocation.getLongitude())));
 
         Call<MsgVO> call = RetrofitAdapter.getInstance().updateMyPage(params);
@@ -135,6 +137,10 @@ public class MyProfileAct extends AppCompatActivity {
             case R.id.action_update:
                 updateProfile();
                 break;
+            case android.R.id.home:
+                // NavUtils.navigateUpFromSameTask(this);
+                finish();
+                return true;
         }
         return super.onOptionsItemSelected(item);
 

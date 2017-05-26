@@ -8,7 +8,7 @@ public class Common {
 
     //public static String BASEURL = "http://14.63.225.198:8080/";
     public static final String BASEURL = "http://kt.notivation.net/";
-
+    public static final String BASEFILEURL = BASEURL + "files/";
     public static final String ID = "ID";
     public static final String EMAIL = "EMAIL";
     public static final String PASSWORD = "PASSWORD";
@@ -35,7 +35,8 @@ public class Common {
     public static final String TOILET = "TOILET";
     public static final String COSTDAY = "COSTDAY";
     public static final String ROOM = "ROOM";
-    public static final String PIC = "PIC[]";
+    public static final String PIC_ARR = "PIC[]";
+    public static final String PIC = "PIC";
     // 코멘트
     public static final String TYPE = "TYPE";
     public static final String SEQ = "SEQ";
