@@ -207,6 +207,15 @@ public class RoomVO {
             String MEMBER_ID;
             String COMM_TEXT;
             String CREATE_DATE;
+            String MEMBER_NICK;
+
+            public String getMEMBER_NICK() {
+                return MEMBER_NICK;
+            }
+
+            public void setMEMBER_NICK(String MEMBER_NICK) {
+                this.MEMBER_NICK = MEMBER_NICK;
+            }
 
             public String getMEMBER_ID() {
                 return MEMBER_ID;
