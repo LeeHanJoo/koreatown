@@ -55,7 +55,9 @@ import kr.nt.koreatown.Common;
 import kr.nt.koreatown.KoreaTown;
 import kr.nt.koreatown.Listener.MyMenuClickListener;
 import kr.nt.koreatown.R;
+import kr.nt.koreatown.SplashActivity;
 import kr.nt.koreatown.bus.BusProvider;
+import kr.nt.koreatown.bus.LogoutEvent;
 import kr.nt.koreatown.bus.RefreshDetailViewEvent;
 import kr.nt.koreatown.bus.RefreshViewEvent;
 import kr.nt.koreatown.databinding.CommentItemBinding;
@@ -122,8 +124,14 @@ public class MainAct extends AppCompatActivity implements OnMapReadyCallback{
         marker_root_view = LayoutInflater.from(this).inflate(marker, null);
        // init();
         BusProvider.getInstance().register(this);
-        getProfile();
 
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getProfile();
     }
 
     private void setUIMenu(){
@@ -216,6 +224,7 @@ public class MainAct extends AppCompatActivity implements OnMapReadyCallback{
     private void setUpMap(){
         gMap.setOnMarkerClickListener(markerClick);
         gMap.setOnMapClickListener(mapClick);
+
         binding.includeMain.drawer.setOnDrawerScrollListener(new MultiDirectionSlidingDrawer.OnDrawerScrollListener() {
             @Override
             public void onScrollStarted() {
@@ -248,6 +257,20 @@ public class MainAct extends AppCompatActivity implements OnMapReadyCallback{
     @Subscribe
     public void refreshDetailView(RefreshDetailViewEvent event){
         getDetail(true);
+        //Toast.makeText(this, "리프레쉬뷰 버스 들어옴", Toast.LENGTH_SHORT).show();
+    }
+
+    @Subscribe
+    public void logout(LogoutEvent event){
+        // 로그인정보 다삭제
+        SharedManager.getInstance().setBoolean(this,Common.AUTO_LOGIN,false);
+        SharedManager.getInstance().setString(this,Common.ID,"");
+        SharedManager.getInstance().setString(this,Common.PASSWORD,"");
+        SharedManager.getInstance().setString(this,Common.MEMBER_TYPE,"");
+
+        Intent intent = new Intent(MainAct.this, SplashActivity.class);
+        startActivity(intent);
+        finish();
         //Toast.makeText(this, "리프레쉬뷰 버스 들어옴", Toast.LENGTH_SHORT).show();
     }
 
@@ -379,6 +402,7 @@ public class MainAct extends AppCompatActivity implements OnMapReadyCallback{
     }
 
     public void setDetailUI(final RoomVO roomVO){
+
         binding.includeMain.detailDate.setText(Utils.CreateDataWithCheck(roomVO.getData().getCREATE_DATE()));
         binding.includeMain.detailTime.setText(getTimeLimit(roomVO.getData().getTIME_MINUTE()));
         binding.includeMain.detailRoomInfo.setText(String.format("%s room , %s bathroom",roomVO.getData().getRM_ROOM(),roomVO.getData().getRM_TOILET()));
@@ -650,7 +674,15 @@ public class MainAct extends AppCompatActivity implements OnMapReadyCallback{
         if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
             binding.drawerLayout.closeDrawer(GravityCompat.START);
         }else{
-            finish();
+
+            if(markerClickFlag){ //마커가 클릭되있는상태
+                // markerClickFlag = false;
+                hideMarkerDetail();
+                setUI(Item);
+                markerClickFlag =! markerClickFlag;
+            }else{
+                finish();
+            }
         }
     }
 
@@ -675,10 +707,7 @@ public class MainAct extends AppCompatActivity implements OnMapReadyCallback{
         @Override
         public void onBindViewHolder(final ViewHolder holder,final int position) {
             RoomVO.Room.Comment item = items.get(position);
-            holder.itemBinding.itemComment.setText(item.getCOMM_TEXT());
-            holder.itemBinding.itemCreateId.setText(item.getMEMBER_ID());
-            holder.itemBinding.itemDate.setText(item.getCREATE_DATE());
-
+            holder.itemBinding.setComment(item);
         }
 
 

@@ -38,10 +38,12 @@ import java.util.Map;
 
 import kr.nt.koreatown.Common;
 import kr.nt.koreatown.KoreaTown;
+import kr.nt.koreatown.R;
 import kr.nt.koreatown.bus.BusProvider;
 import kr.nt.koreatown.bus.LoginEvent;
 import kr.nt.koreatown.retrofit.RetrofitAdapter;
 import kr.nt.koreatown.retrofit.RetrofitUtil;
+import kr.nt.koreatown.util.CommonUtil;
 import kr.nt.koreatown.util.Utils;
 import kr.nt.koreatown.vo.MemberVO;
 import kr.nt.koreatown.vo.MsgVO;
@@ -327,6 +329,7 @@ public class BaseLogin extends AppCompatActivity {
                     }else if(result.getResult().equals("2")){ // 이미아이디있음 로그인 시도
                         doLogin(ID,PASSWORD,Common.TYPE_FACEBOOK);
                     }else{
+                        CommonUtil.showOnBtnDialog(BaseLogin.this,"로그인실패",result.getData().getMsg(),null);
                         //CommonUtil.showOnBtnDialog(BaseLogin.this,"카카오로그인",item.getData().getMsg(),null);
                     }
                 }
@@ -334,50 +337,9 @@ public class BaseLogin extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<MsgVO> call, Throwable t) {
-                Log.e("","");
+                CommonUtil.showOnBtnDialog(BaseLogin.this,"로그인실패",getString(R.string.server_err),null);
             }
         });
-
-        /*final String pushkey = SharedManager.getInstance().getString(this, Common.PUSH_KEY);
-        final String deviceId = CommonUtil.getDeviceId(this);
-        Call<MemberVO> call = RetrofitAdapter.getInstance().postSign(id,id, pw, "", "", getGender(gender), "", pushkey, Common.OS_TYPE, deviceId,name,"F");
-        call.enqueue(new Callback<MemberVO>() {
-            @Override
-            public void onResponse(Call<MemberVO> call, Response<MemberVO> response) {
-                MemberVO item = response.body();
-                if(item == null || item.getResult() == null){
-                    CommonUtil.showOnBtnDialog(BaseLogin.this,"서버오류","잠시후 다시시도해주세요",null);
-                }else{
-                    if(item.getResult().equals("1")){ // 가입완료
-                        SharedManager.getInstance().setString(BaseLogin.this,Common.USER_ID,id);
-                        SharedManager.getInstance().setString(BaseLogin.this,Common.USER_PW,pw);
-                        SharedManager.getInstance().setString(BaseLogin.this,Common.APP_LOGINTYPE,"F");
-                        SharedManager.getInstance().setBoolean(BaseLogin.this, Common.AUTOLOGIN, true);
-
-                        Intent intent = new Intent(BaseLogin.this,KakaoFaceActivity.class);
-                        intent.putExtra("name", name);
-                        startActivity(intent);
-                        finish();
-
-					*//*	Intent intent = new Intent(BaseLogin.this,SignHopeActivity.class);
-						intent.putExtra("mSex",getGender(gender));
-						startActivity(intent);
-						finish();*//*
-                        //	Intent intent = new Intent(BaseLogin.this,FavHospitalActivity.class);
-                        //	startActivity(intent);
-                    }else if(item.getResult().equals("2")){ // 이미아이디있음 로그인 시도
-                        doLogin(id,pw,pushkey,deviceId,"F");
-                    }else{
-                        CommonUtil.showOnBtnDialog(BaseLogin.this,"페이스북",item.getData().getMsg(),null);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<MemberVO> call, Throwable t) {
-                CommonUtil.showOnBtnDialog(BaseLogin.this,"서버오류","잠시후 다시시도해주세요",null);
-            }
-        });*/
     }
 
     public void doLogin(final String ID , final String PASSWORD, final String loginType){
@@ -413,61 +375,17 @@ public class BaseLogin extends AppCompatActivity {
                         finish();*/
                     }else if(item.getResult().equals("2") || item.getResult().equals("3")){ // 무조건 로그인 api 재호출
                         doOnlyLogin(ID,PASSWORD,loginType);
+                    }else{
+                        CommonUtil.showOnBtnDialog(BaseLogin.this,"로그인실패",item.getData().getMsg(),null);
                     }
                 }
             }
 
             @Override
             public void onFailure(Call<MsgVO> call, Throwable t) {
-
+                CommonUtil.showOnBtnDialog(BaseLogin.this,"로그인실패",getString(R.string.server_err),null);
             }
         });
-
-        /*Call<MemberVO> call = RetrofitAdapter.getInstance().doLogin(id, Common.OS_TYPE, pushkey, pw, deviceId);
-        call.enqueue(new Callback<MemberVO>() {
-            @Override
-            public void onResponse(Call<MemberVO> call, Response<MemberVO> response) {
-                MemberVO item = response.body();
-                if(item == null || item.getResult() == null){
-                    CommonUtil.showOnBtnDialog(BaseLogin.this,"서버오류","잠시후 다시시도해주세요",null);
-                }else{
-                    if(item.getResult().equals("1")) { // 로그인 성공
-                        SharedManager.getInstance().setString(BaseLogin.this,Common.USER_ID,id);
-                        SharedManager.getInstance().setString(BaseLogin.this,Common.USER_PW,pw);
-                        SharedManager.getInstance().setString(BaseLogin.this, Common.APP_LOGINTYPE, loginType);
-                        SharedManager.getInstance().setBoolean(BaseLogin.this, Common.AUTOLOGIN, true);
-                        Intent intent = new Intent(BaseLogin.this, MainActivity.class);
-                        intent.putExtra("PUSHYN", getIntent().getBooleanExtra("PUSHYN", false));
-                        intent.putExtra("PUSHITEM", getIntent().getParcelableExtra("PUSHITEM"));
-                        startActivity(intent);
-                        finish();
-                    }else{
-                        if(item.getResult().equals("2") ||item.getResult().equals("3") ){
-                            CommonUtil.showTwoBtnDialog(BaseLogin.this, "로그인", item.getData().getMsg() + "\n 계속 진행하시겠습니까?", new CommonUtil.onDialogClick() {
-                                @Override
-                                public void setonConfirm() {
-                                    goLogin(id,pw,pushkey,deviceId,loginType);
-                                }
-
-                                @Override
-                                public void setonCancel() {
-
-                                }
-                            });
-
-                        }else{
-                            CommonUtil.showOnBtnDialog(BaseLogin.this,"로그인",item.getData().getMsg(),null);
-                        }
-
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<MemberVO> call, Throwable t) {
-                CommonUtil.showOnBtnDialog(BaseLogin.this,"서버오류", "잠시후 다시시도해주세요",null);
-            }
-        });*/
     }
 
     public void doOnlyLogin(final String ID , final String PASSWORD, final String loginType){
@@ -498,18 +416,15 @@ public class BaseLogin extends AppCompatActivity {
                         memberVO.setMEMBER_TYPE(loginType);
                         BusProvider.getInstance().post(new LoginEvent(memberVO));
 
-                       /* Intent intent = new Intent(BaseLogin.this, MainAct.class);
-                        startActivity(intent);
-                        finish();*/
                     }else {
-
+                        CommonUtil.showOnBtnDialog(BaseLogin.this,"로그인실패",item.getData().getMsg(),null);
                     }
                 }
             }
 
             @Override
             public void onFailure(Call<MsgVO> call, Throwable t) {
-
+                CommonUtil.showOnBtnDialog(BaseLogin.this,"로그인실패",getString(R.string.server_err),null);
             }
         });
     }

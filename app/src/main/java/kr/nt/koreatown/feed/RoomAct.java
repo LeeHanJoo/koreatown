@@ -126,7 +126,6 @@ public class RoomAct extends AppCompatActivity implements View.OnClickListener{
             }
 
         });
-
     }
 
 
@@ -143,7 +142,9 @@ public class RoomAct extends AppCompatActivity implements View.OnClickListener{
             case R.id.visible_detail_btn:
                 if(binding.viewDetail.getVisibility() == View.VISIBLE){
                     binding.viewDetail.setVisibility(View.GONE);
+                    binding.visibleDetailBtn.setImageResource(R.drawable.bar_advance_up);
                 }else{
+                    binding.visibleDetailBtn.setImageResource(R.drawable.bar_advance_down);
                     binding.viewDetail.setVisibility(View.VISIBLE);
                 }
                 scrollToEnd();

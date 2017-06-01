@@ -36,38 +36,47 @@
             android:name="com.kakao.sdk.AppKey"
             android:value="@string/kakao_app_key" />
 
-        <activity android:name="kr.nt.koreatown.main.MainAct"
-            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name="kr.nt.koreatown.main.MainAct"
+            android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity android:name=".intro.SignEmailAct"
-            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".intro.SignEmailAct"
+            android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity android:name=".feed.SelectAct"
+        <activity
+            android:name=".feed.SelectAct"
             android:theme="@android:style/Theme.Dialog" />
 
-        <activity android:name="kr.nt.koreatown.intro.LoginAct"
-            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name="kr.nt.koreatown.intro.LoginAct"
+            android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity android:name=".feed.RoomAct"
-            android:windowSoftInputMode="stateAlwaysHidden"
-            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".feed.RoomAct"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateAlwaysHidden" />
 
-        <activity android:name=".feed.StoryAct"
-            android:windowSoftInputMode="stateAlwaysHidden"
-            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".feed.StoryAct"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateAlwaysHidden" />
 
-        <activity android:name=".setting.SettingAct"
-            android:windowSoftInputMode="stateAlwaysHidden"
-            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".setting.SettingAct"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateAlwaysHidden" />
 
-        <activity android:name=".setting.MyProfileAct"
-            android:windowSoftInputMode="stateAlwaysHidden"
-            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".setting.MyProfileAct"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".feed.CommentPopup"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Dialog" />
-        <activity android:name=".SplashActivity"
+        <activity
+            android:name=".SplashActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
