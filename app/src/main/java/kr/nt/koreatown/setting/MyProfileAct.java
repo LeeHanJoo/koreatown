@@ -78,7 +78,28 @@ public class MyProfileAct extends AppCompatActivity {
     }
 
     private void setUI(MemberVO Item ){
+        binding.profileSex.setSelection(converSexStr(Item.getMEMBER_SEX()));
         binding.setUser(Item);
+    }
+
+    public int converSexStr(String sex){
+        int result = 0;
+        if(sex.equals("M")){
+            result = 1;
+        }if(sex.equals("W")){
+            result = 2;
+        }
+        return result;
+    }
+
+    public String getSexstr(int index){
+        String result = "";
+        if(index == 1){
+            result = "M";
+        }if(index == 2){
+            result = "W";
+        }
+        return result;
     }
 
     private void updateProfile(){
@@ -89,7 +110,7 @@ public class MyProfileAct extends AppCompatActivity {
         params.put(Common.NICK_NAME,RetrofitUtil.toRequestBody(binding.profileName.getText().toString().trim()));
         params.put(Common.EMAIL,RetrofitUtil.toRequestBody(binding.profileEmail.getText().toString().trim()));
         params.put(Common.BIRTHDAY,RetrofitUtil.toRequestBody(binding.profileBirth.getText().toString().trim()));
-        params.put(Common.SEX,RetrofitUtil.toRequestBody(binding.profileSex.getText().toString().trim()));
+        params.put(Common.SEX,RetrofitUtil.toRequestBody(getSexstr(binding.profileSex.getSelectedItemPosition())));
        // params.put(Common.LON,RetrofitUtil.toRequestBody(String.valueOf(KoreaTown.myLocation.getLongitude())));
 
         Call<MsgVO> call = RetrofitAdapter.getInstance().updateMyPage(params);
