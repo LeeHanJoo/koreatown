@@ -23,6 +23,7 @@ public class KoreaTown extends Application {
     public static double[] my_gps = new double[2];
     private static volatile Activity currentActivity = null;
     public static Location myLocation = null;
+    public static boolean useLogin = false;
     @Override
     public void onCreate() {
         super.onCreate();

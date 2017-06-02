@@ -4,7 +4,6 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -16,15 +15,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import kr.nt.koreatown.Common;
-import kr.nt.koreatown.KoreaTown;
 import kr.nt.koreatown.R;
-import kr.nt.koreatown.bus.BusProvider;
-import kr.nt.koreatown.bus.LoginEvent;
 import kr.nt.koreatown.databinding.SignEmailBinding;
 import kr.nt.koreatown.retrofit.RetrofitAdapter;
 import kr.nt.koreatown.retrofit.RetrofitUtil;
 import kr.nt.koreatown.util.Utils;
-import kr.nt.koreatown.vo.MemberVO;
 import kr.nt.koreatown.vo.MsgVO;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -35,7 +30,7 @@ import retrofit2.Response;
  * Created by user on 2017-05-08.
  */
 
-public class SignEmailAct extends AppCompatActivity{
+public class SignEmailAct extends BaseLogin{
 
     SignEmailBinding binding = null;
     String mSex = "";
@@ -251,7 +246,7 @@ public class SignEmailAct extends AppCompatActivity{
         });
     }
 
-    public void doLogin(final String ID , final String PASSWORD, final String loginType){
+    /*public void doLogin(final String ID , final String PASSWORD, final String loginType){
 
         String PUSH_KEY = "";
         String OS_VER = Utils.getOsVersion();
@@ -279,9 +274,9 @@ public class SignEmailAct extends AppCompatActivity{
                         memberVO.setPASSWORD(PASSWORD);
                         memberVO.setMEMBER_TYPE(loginType);
                         BusProvider.getInstance().post(new LoginEvent(memberVO));
-                       /* Intent intent = new Intent(BaseLogin.this, MainAct.class);
+                       *//* Intent intent = new Intent(BaseLogin.this, MainAct.class);
                         startActivity(intent);
-                        finish();*/
+                        finish();*//*
                     }else if(item.getResult().equals("2") || item.getResult().equals("3")){ // 무조건 로그인 api 재호출
                         doOnlyLogin(ID,PASSWORD,loginType);
                     }
@@ -295,9 +290,9 @@ public class SignEmailAct extends AppCompatActivity{
         });
 
 
-    }
+    }*/
 
-    public void doOnlyLogin(final String ID , final String PASSWORD, final String loginType){
+    /*public void doOnlyLogin(final String ID , final String PASSWORD, final String loginType){
 
         String PUSH_KEY = "";
         String OS_VER = Utils.getOsVersion();
@@ -325,9 +320,9 @@ public class SignEmailAct extends AppCompatActivity{
                         memberVO.setMEMBER_TYPE(loginType);
                         BusProvider.getInstance().post(new LoginEvent(memberVO));
 
-                       /* Intent intent = new Intent(BaseLogin.this, MainAct.class);
+                       *//* Intent intent = new Intent(BaseLogin.this, MainAct.class);
                         startActivity(intent);
-                        finish();*/
+                        finish();*//*
                     }else {
 
                     }
@@ -341,5 +336,5 @@ public class SignEmailAct extends AppCompatActivity{
         });
 
 
-    }
+    }*/
 }

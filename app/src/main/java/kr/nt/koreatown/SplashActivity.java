@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 import kr.lhj.chichapermission.ChichaPermission;
 import kr.lhj.chichapermission.PermissionListener;
-import kr.nt.koreatown.intro.LoginAct;
+import kr.nt.koreatown.main.MainAct;
 import kr.nt.koreatown.util.MyLocation;
 import kr.nt.koreatown.util.Utils;
 
@@ -89,7 +89,8 @@ public class SplashActivity extends AppCompatActivity {
             }else{
                 KoreaTown.myLocation = location;
                // mlocation.LocationDestory();
-                Intent intent = new Intent(SplashActivity.this,LoginAct.class);
+              //  Intent intent = new Intent(SplashActivity.this,LoginAct.class);
+                Intent intent = new Intent(SplashActivity.this,MainAct.class);
                 startActivity(intent);
                 finish();
             }

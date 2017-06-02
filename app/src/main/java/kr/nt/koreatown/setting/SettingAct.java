@@ -51,6 +51,7 @@ public class SettingAct extends AppCompatActivity implements View.OnClickListene
                 CommonUtil.showTwoBtnDialog(SettingAct.this, "로그아웃", "로그아웃 하시겠습니까?", new CommonUtil.onDialogClick() {
                     @Override
                     public void setonConfirm() {
+
                         BusProvider.getInstance().post(new LogoutEvent());
                         finish();
                     }

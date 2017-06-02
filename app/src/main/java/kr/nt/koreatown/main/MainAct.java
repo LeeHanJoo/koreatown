@@ -15,7 +15,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
@@ -57,6 +56,7 @@ import kr.nt.koreatown.Listener.MyMenuClickListener;
 import kr.nt.koreatown.R;
 import kr.nt.koreatown.SplashActivity;
 import kr.nt.koreatown.bus.BusProvider;
+import kr.nt.koreatown.bus.LoginEvent;
 import kr.nt.koreatown.bus.LogoutEvent;
 import kr.nt.koreatown.bus.RefreshDetailViewEvent;
 import kr.nt.koreatown.bus.RefreshViewEvent;
@@ -66,6 +66,8 @@ import kr.nt.koreatown.feed.CommentPopup;
 import kr.nt.koreatown.feed.RoomAct;
 import kr.nt.koreatown.feed.SelectAct;
 import kr.nt.koreatown.feed.StoryAct;
+import kr.nt.koreatown.intro.BaseLogin;
+import kr.nt.koreatown.intro.LoginAct;
 import kr.nt.koreatown.retrofit.RetrofitAdapter;
 import kr.nt.koreatown.retrofit.RetrofitUtil;
 import kr.nt.koreatown.util.CommonUtil;
@@ -90,7 +92,7 @@ import static kr.nt.koreatown.R.layout.marker;
  * Created by user on 2017-04-17.
  */
 
-public class MainAct extends AppCompatActivity implements OnMapReadyCallback{
+public class MainAct extends BaseLogin implements OnMapReadyCallback{
 
     private GoogleMap gMap;
     SupportMapFragment mapFragment = null;
@@ -125,16 +127,52 @@ public class MainAct extends AppCompatActivity implements OnMapReadyCallback{
        // init();
         BusProvider.getInstance().register(this);
 
-
+        boolean autoLogin = SharedManager.getInstance().getBoolean(this,Common.AUTO_LOGIN);
+        if(autoLogin){
+            String ID = SharedManager.getInstance().getString(this, Common.ID);
+            String PASS = SharedManager.getInstance().getString(this, Common.PASSWORD);
+            String TYPE = SharedManager.getInstance().getString(this, Common.MEMBER_TYPE);
+            doLogin(ID,PASS,TYPE);
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        getProfile();
+        if(KoreaTown.useLogin){
+            getProfile();
+        }else{
+            setUINotLogin();
+        }
     }
 
-    private void setUIMenu(){
+    private void setUINotLogin(){
+       // String ID = SharedManager.getInstance().getString(this, Common.ID);
+        CommonUtil.setGlideImage(MainAct.this,Common.BASEFILEURL + ""+".jpg",binding.profileImg);
+        binding.memberId.setText("로그인이 필요합니다.");
+        binding.profileImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CommonUtil.showTwoBtnDialog(MainAct.this, "로그인", "로그인이 필요합니다. 로그인페이지로 이동하시겠습니까?", new CommonUtil.onDialogClick() {
+                    @Override
+                    public void setonConfirm() {
+                        Intent intent = new Intent(MainAct.this, LoginAct.class);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void setonCancel() {
+
+                    }
+                });
+            }
+        });
+
+
+    }
+
+    private void setUIMenu(MemberVO Item){
+
         binding.profileImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -151,7 +189,6 @@ public class MainAct extends AppCompatActivity implements OnMapReadyCallback{
                                     }
                                 }).setMaxCount(1000)
                                 .create();
-
                         bottomSheetDialogFragment.show(getSupportFragmentManager());
                     }
 
@@ -165,6 +202,7 @@ public class MainAct extends AppCompatActivity implements OnMapReadyCallback{
 
         String ID = SharedManager.getInstance().getString(this, Common.ID);
         CommonUtil.setGlideImage(MainAct.this,Common.BASEFILEURL + ID+".jpg",binding.profileImg);
+        binding.memberId.setText(Item.getMEMBER_NICK());
     }
 
     private void getProfile(){
@@ -179,8 +217,8 @@ public class MainAct extends AppCompatActivity implements OnMapReadyCallback{
                     String result = json.getAsJsonObject().get("result").getAsString();
                     if (result.equals("1")) {
                         MemberVO Item =  gson.fromJson(json.getAsJsonObject().get("data").getAsJsonObject(), MemberVO.class);
-                        setUIMenu();
-                        binding.memberId.setText(Item.getMEMBER_NICK());
+                        setUIMenu(Item);
+
                     }
                 }
             }
@@ -216,7 +254,7 @@ public class MainAct extends AppCompatActivity implements OnMapReadyCallback{
     }
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
         BusProvider.getInstance().unregister(this);
     }
@@ -246,6 +284,17 @@ public class MainAct extends AppCompatActivity implements OnMapReadyCallback{
     }
 
     @Subscribe
+    public void LoginComple(LoginEvent event){
+        MemberVO memberVO = event.getMemberVO();
+        SharedManager.getInstance().setString(MainAct.this, Common.ID,memberVO.getMEMBER_ID());
+        SharedManager.getInstance().setString(MainAct.this, Common.PASSWORD,memberVO.getPASSWORD());
+        SharedManager.getInstance().setString(MainAct.this,Common.MEMBER_TYPE ,memberVO.getMEMBER_TYPE());
+        SharedManager.getInstance().setBoolean(MainAct.this,Common.AUTO_LOGIN,true);
+        KoreaTown.useLogin = true;
+        onResume();
+    }
+
+    @Subscribe
     public void refreshView(RefreshViewEvent event){
         String LAT = String.valueOf(KoreaTown.myLocation.getLatitude());
         String LON = String.valueOf(KoreaTown.myLocation.getLongitude());
@@ -267,7 +316,7 @@ public class MainAct extends AppCompatActivity implements OnMapReadyCallback{
         SharedManager.getInstance().setString(this,Common.ID,"");
         SharedManager.getInstance().setString(this,Common.PASSWORD,"");
         SharedManager.getInstance().setString(this,Common.MEMBER_TYPE,"");
-
+        KoreaTown.useLogin = false;
         Intent intent = new Intent(MainAct.this, SplashActivity.class);
         startActivity(intent);
         finish();
@@ -438,6 +487,21 @@ public class MainAct extends AppCompatActivity implements OnMapReadyCallback{
         binding.includeMain.content.detailContentCmtbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(!KoreaTown.useLogin){
+                    CommonUtil.showTwoBtnDialog(MainAct.this, "로그인", "로그인이 필요합니다. 로그인페이지로 이동하시겠습니까?", new CommonUtil.onDialogClick() {
+                        @Override
+                        public void setonConfirm() {
+                            Intent intent = new Intent(MainAct.this, LoginAct.class);
+                            startActivity(intent);
+                        }
+
+                        @Override
+                        public void setonCancel() {
+
+                        }
+                    });
+                    return;
+                }
                 Intent intent = new Intent(MainAct.this, CommentPopup.class);
                 intent.putExtra(CommentPopup.GUBUN,"R");
                 intent.putExtra(CommentPopup.SEQ,roomVO.getData().getRM_SEQ());

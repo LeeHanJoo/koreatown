@@ -192,10 +192,12 @@ public class LoginAct extends BaseLogin {
         SharedManager.getInstance().setString(LoginAct.this, Common.PASSWORD,memberVO.getPASSWORD());
         SharedManager.getInstance().setString(LoginAct.this,Common.MEMBER_TYPE ,memberVO.getMEMBER_TYPE());
         SharedManager.getInstance().setBoolean(LoginAct.this,Common.AUTO_LOGIN,true);
+        KoreaTown.useLogin = true;
         //Toast.makeText(this, "리프레쉬뷰 로그인 버스 들어옴", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(LoginAct.this, MainAct.class);
-        startActivity(intent);
         finish();
+        //Intent intent = new Intent(LoginAct.this, MainAct.class);
+        //startActivity(intent);
+        //finish();
 
     }
 
