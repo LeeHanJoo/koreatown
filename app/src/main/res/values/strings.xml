@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">koreatownsample</string>
+    <string name="app_name">코리아타운</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -12,5 +12,8 @@
 
     <string name="kakao_app_key">8761c012b4a6d733ec1c8e489ce723bd</string>
     <string name="kakao_scheme">kakao8761c012b4a6d733ec1c8e489ce723bd</string>
+
+    <string name="server_err">서버와 연결이 원활하지 않습니다. 잠시후 다시 시도해주세요</string>
+
 
 </resources>

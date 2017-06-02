@@ -20,6 +20,7 @@
         <item name="windowNoTitle">true</item>
         <item name="android:windowSharedElementEnterTransition">@transition/change_bounds</item>
         <item name="android:windowSharedElementExitTransition">@transition/change_bounds</item>
+
     </style>
 
 
