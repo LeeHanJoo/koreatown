@@ -7,12 +7,6 @@
         <variable
             name="user"
             type="kr.nt.koreatown.vo.MemberVO"/>
-     <!--   <variable name="MEMBER_ID" type="String"/>
-        <variable name="MEMBER_BIRTH" type="String"/>
-        <variable name="MEMBER_EMAIL" type="String"/>
-        <variable name="MEMBER_NICK" type="String"/>
-        <variable name="MEMBER_SEX" type="String"/>
-        <variable name="MEMBER_TYPE" type="String"/>-->
     </data>
 
 
@@ -158,13 +152,22 @@
                 android:id="@+id/logout_layout"
                 style="@style/ProfileLayout">
 
-                <EditText
+                <Spinner
                     android:id="@+id/profile_sex"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:text='@{user.MEMBER_SEX}'/>
+                    android:background="@drawable/select_date1"
+                    android:entries="@array/sex" />
+
+               <!-- <EditText
+                    android:id="@+id/profile_sex"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:text='@{user.MEMBER_SEX}'/>-->
 
                 <TextView
                     android:layout_width="wrap_content"

@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <data>
+        <variable
+            name="comment"
+            type="kr.nt.koreatown.vo.RoomVO.Room.Comment"/>
+    </data>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,7 +34,7 @@
                 android:id="@+id/item_comment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="" />
+                android:text="@{comment.COMM_TEXT}" />
 
             <LinearLayout
                 android:layout_marginTop="3dip"
@@ -40,7 +46,7 @@
                     android:id="@+id/item_create_id"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="" />
+                    android:text="@{comment.MEMBER_NICK}" />
 
                 <TextView
                     android:textColor="#ffffff"
@@ -53,7 +59,7 @@
                     android:id="@+id/item_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="" />
+                    android:text="@{comment.CREATE_DATE}" />
             </LinearLayout>
 
         </LinearLayout>

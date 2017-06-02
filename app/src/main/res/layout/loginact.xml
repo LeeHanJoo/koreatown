@@ -2,6 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -103,8 +104,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                >
+                android:layout_alignParentBottom="true">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -112,16 +112,12 @@
                     android:layout_weight="1"
                     android:gravity="center">
 
-                    <Button
+
+                    <ImageView
                         android:id="@+id/email_login"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="이메일"/>
-                  <!--  <ImageView
-                        android:id="@+id/email_login"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/btn_join_email" />-->
+                        android:src="@drawable/login_go_email" />
 
                 </LinearLayout>
 
@@ -131,17 +127,11 @@
                     android:layout_weight="1"
                     android:gravity="center">
 
-                    <Button
+                    <ImageView
                         android:id="@+id/facebook_login"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="페이스북"/>
-
-                  <!--  <ImageView
-                        android:id="@+id/facebook_login"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/btn_join_fb" />-->
+                        android:src="@drawable/login_go_facebook" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -150,24 +140,18 @@
                     android:layout_weight="1"
                     android:gravity="center">
 
-                    <Button
+                    <ImageView
                         android:id="@+id/kakao_login"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="카카오톡"/>
-
-                 <!--   <ImageView
-                        android:id="@+id/kakao_login"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/btn_kakao" />-->
+                        android:src="@drawable/login_go_kakao" />
                 </LinearLayout>
 
 
             </LinearLayout>
 
 
-           <!-- <RelativeLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -180,12 +164,11 @@
                     android:visibility="gone" />
 
 
-            </RelativeLayout>-->
+            </RelativeLayout>
 
 
         </RelativeLayout>
     </android.support.design.widget.CoordinatorLayout>
-
 
 
 </layout>

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:panel="http://schemas.android.com/apk/src/org.panel">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -24,8 +23,7 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <RelativeLayout
-            xmlns:app="http://schemas.android.com/apk/res-auto"
+        <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -50,8 +48,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="#333333"
-                    android:padding="10dip"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:padding="10dip">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -65,42 +63,42 @@
 
                         <TextView
                             android:id="@+id/detail_date"
-                            android:layout_marginLeft="10dip"
-                            android:layout_toRightOf="@id/detail_icon"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_alignBottom="@id/detail_icon"
+                            android:layout_marginLeft="10dip"
+                            android:layout_toRightOf="@id/detail_icon"
                             android:text="정보가 없습니다."
-                            android:textColor="#ffffff"
-                            android:layout_alignBottom="@id/detail_icon"/>
+                            android:textColor="#ffffff" />
 
                         <TextView
                             android:id="@+id/detail_time"
-                            android:layout_marginLeft="5dip"
-                            android:layout_toRightOf="@id/detail_date"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_alignBottom="@id/detail_icon"
+                            android:layout_marginLeft="5dip"
+                            android:layout_toRightOf="@id/detail_date"
                             android:text="정보가 없습니다."
-                            android:textColor="#ffffff"
-                            android:layout_alignBottom="@id/detail_icon"/>
+                            android:textColor="#ffffff" />
 
                     </RelativeLayout>
 
                     <RelativeLayout
-                        android:layout_marginTop="10dip"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dip">
 
                         <ImageView
                             android:id="@+id/profilePhoto"
-                            android:layout_alignParentRight="true"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/photo_frame"/>
+                            android:layout_alignParentRight="true"
+                            android:src="@drawable/photo_frame" />
 
                         <LinearLayout
-                            android:layout_toLeftOf="@id/profilePhoto"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_toLeftOf="@id/profilePhoto"
                             android:orientation="vertical">
 
                             <TextView
@@ -109,14 +107,15 @@
                                 android:layout_height="wrap_content"
                                 android:text="정보가 없습니다."
                                 android:textColor="#ffffff"
-                                android:textSize="20sp"/>
+                                android:textSize="20sp" />
+
                             <TextView
                                 android:id="@+id/detail_room_addr"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="정보가 없습니다."
                                 android:textColor="#ffffff"
-                                android:textSize="15sp"/>
+                                android:textSize="15sp" />
                         </LinearLayout>
 
                     </RelativeLayout>
@@ -130,8 +129,7 @@
                     android:layout_below="@id/click_detail"
                     my:content="@+id/content"
                     my:direction="topToBottom"
-                    my:handle="@+id/handle"
-                    >
+                    my:handle="@+id/handle">
 
                     <include
                         android:id="@+id/content"
