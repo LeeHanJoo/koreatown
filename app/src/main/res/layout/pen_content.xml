@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <LinearLayout
+
+    <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_gravity="bottom"
@@ -15,30 +16,40 @@
             android:text=""
             android:textSize="15sp" />
 
+        <Button
+            android:layout_alignParentBottom="true"
+            android:id="@+id/detail_content_cmtbtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="코멘트등록"/>
         <android.support.v4.view.ViewPager
+            android:layout_below="@id/detail_desc"
             android:id="@+id/pager"
             android:layout_width="match_parent"
             android:layout_height="150dip"
             android:layout_marginTop="20dip" />
 
         <TextView
-
+            android:layout_below="@id/pager"
             android:id="@+id/detail_content_price"
             style="@style/BaseTextView"
             android:text="" />
 
         <TextView
+            android:layout_below="@id/detail_content_price"
             android:id="@+id/detail_content_room"
             style="@style/BaseTextView"
             android:text="" />
 
 
         <TextView
+            android:layout_below="@id/detail_content_room"
             android:id="@+id/detail_content_bath"
             style="@style/BaseTextView"
             android:text="" />
 
        <TextView
+           android:layout_below="@id/detail_content_bath"
            android:id="@+id/detail_content_cnt"
            android:layout_marginTop="20dip"
            android:textColor="#ffffff"
@@ -48,16 +59,15 @@
 
         <android.support.v7.widget.RecyclerView
             android:layout_marginTop="10dip"
+            android:layout_below="@id/detail_content_cnt"
+            android:layout_above="@id/detail_content_cmtbtn"
             android:id="@+id/detail_content_recyler"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
         </android.support.v7.widget.RecyclerView>
 
-        <Button
-            android:id="@+id/detail_content_cmtbtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="코멘트등록"/>
-    </LinearLayout>
+
+    </RelativeLayout>
+
 </layout>

@@ -90,8 +90,8 @@
 
                         <ImageView
                             android:id="@+id/profilePhoto"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="60dip"
+                            android:layout_height="60dip"
                             android:layout_alignParentRight="true"
                             android:src="@drawable/photo_frame" />
 
