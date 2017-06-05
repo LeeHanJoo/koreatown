@@ -247,7 +247,7 @@ public class RoomAct extends AppCompatActivity implements View.OnClickListener{
                 MsgVO item = response.body();
                 if(item != null && item.getResult().equals("1")){
                    // BusProvider.getInstance().post(new RefreshViewEvent());
-                    CommonUtil.showOnBtnDialog(RoomAct.this, "방등록", "방등록이 완료되었습니다.", new CommonUtil.onDialogClick() {
+                    CommonUtil.showOnBtnDialog(RoomAct.this, "방등록", item.getData().getMsg(), new CommonUtil.onDialogClick() {
                         @Override
                         public void setonConfirm() {
                             BusProvider.getInstance().post(new RefreshViewEvent());
@@ -260,12 +260,15 @@ public class RoomAct extends AppCompatActivity implements View.OnClickListener{
                         }
                     });
 
+                }else{
+                    CommonUtil.showOnBtnDialog(RoomAct.this, "방등록", item.getData().getMsg(), null);
                 }
             }
 
             @Override
             public void onFailure(Call<MsgVO> call, Throwable t) {
                 t.printStackTrace();
+                CommonUtil.showOnBtnDialog(RoomAct.this, "방등록", getString(R.string.server_err), null);
             }
         });
     }

@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.signature.StringSignature;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -597,7 +598,7 @@ public class CommonUtil {
 
 
 	public static void setGlideImage(Context context,String fileUrl,ImageView view){
-		Glide.with(context).load(fileUrl).placeholder(R.drawable.btn_people).diskCacheStrategy(DiskCacheStrategy.ALL).bitmapTransform(new CropCircleTransformation(context)).into(view);
+		Glide.with(context).load(fileUrl).placeholder(R.drawable.btn_people).signature(new StringSignature(String.valueOf(System.currentTimeMillis()))).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).bitmapTransform(new CropCircleTransformation(context)).into(view);
 	}
 
 

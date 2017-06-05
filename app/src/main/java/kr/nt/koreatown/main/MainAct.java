@@ -27,6 +27,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -42,6 +43,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.google.maps.android.clustering.Cluster;
+import com.google.maps.android.clustering.ClusterManager;
 import com.squareup.otto.Subscribe;
 
 import org.json.JSONObject;
@@ -76,6 +79,8 @@ import kr.nt.koreatown.util.SharedManager;
 import kr.nt.koreatown.util.Utils;
 import kr.nt.koreatown.view.ImagePagerAdapter;
 import kr.nt.koreatown.view.MultiDirectionSlidingDrawer;
+import kr.nt.koreatown.view.MyClusterRenderer;
+import kr.nt.koreatown.vo.ClusterVO;
 import kr.nt.koreatown.vo.FeedVO;
 import kr.nt.koreatown.vo.MemberVO;
 import kr.nt.koreatown.vo.MsgVO;
@@ -260,8 +265,24 @@ public class MainAct extends BaseLogin implements OnMapReadyCallback{
     }
 
     private void setUpMap(){
-        gMap.setOnMarkerClickListener(markerClick);
+       // gMap.setOnMarkerClickListener(markerClick);
+
         gMap.setOnMapClickListener(mapClick);
+//        gMap.setOnCameraMoveListener(cameraMoveCallback);
+        mClsterMa.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<ClusterVO>() {
+            @Override
+            public boolean onClusterClick(Cluster<ClusterVO> cluster) {
+                Toast.makeText(MainAct.this,"몇개 " + cluster.getSize(),Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
+        mClsterMa.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<ClusterVO>() {
+            @Override
+            public boolean onClusterItemClick(ClusterVO clusterVO) {
+                Toast.makeText(MainAct.this,"몇개 " + clusterVO.getPosition(),Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
 
         binding.includeMain.drawer.setOnDrawerScrollListener(new MultiDirectionSlidingDrawer.OnDrawerScrollListener() {
             @Override
@@ -278,7 +299,7 @@ public class MainAct extends BaseLogin implements OnMapReadyCallback{
                 }
             }
         });
-        gMap.setOnCameraIdleListener(idleListener);
+       // gMap.setOnCameraIdleListener(idleListener);
         //gMap.setOnCameraMoveStartedListener(moveStartCallback);
 
     }
@@ -351,10 +372,10 @@ public class MainAct extends BaseLogin implements OnMapReadyCallback{
         }
     };
 
-   /* GoogleMap.OnCameraMoveListener cameraMoveCallback = new GoogleMap.OnCameraMoveListener() {
+/*    GoogleMap.OnCameraMoveListener cameraMoveCallback = new GoogleMap.OnCameraMoveListener() {
         @Override
         public void onCameraMove() {
-            if(moveStart){
+           *//* if(moveStart){
                 moveStart = false;
                 CameraPosition position = gMap.getCameraPosition();
                 LatLng center = position.target;
@@ -362,7 +383,13 @@ public class MainAct extends BaseLogin implements OnMapReadyCallback{
                 String LON = String.valueOf(center.longitude);
                 getList(LAT,LON);
             }
-            moveStart = false;
+            moveStart = false;*//*
+
+            CameraPosition position = gMap.getCameraPosition();
+            LatLng center = position.target;
+            String LAT = String.valueOf(center.latitude);
+            String LON = String.valueOf(center.longitude);
+            getList(LAT,LON);
         }
     };*/
 
@@ -421,7 +448,7 @@ public class MainAct extends BaseLogin implements OnMapReadyCallback{
         if(gubun.equals("R")){
             getRoomDetail(seq,flag);
         }else if(gubun.equals("S")){
-
+            markerClickFlag =! markerClickFlag;
         }
     }
 
@@ -457,6 +484,7 @@ public class MainAct extends BaseLogin implements OnMapReadyCallback{
         binding.includeMain.detailRoomInfo.setText(String.format("%s room , %s bathroom",roomVO.getData().getRM_ROOM(),roomVO.getData().getRM_TOILET()));
         binding.includeMain.detailRoomAddr.setText(String.format("%s , %s",roomVO.getData().getRM_ADDR2(),roomVO.getData().getRM_ADDR1()));
         binding.includeMain.content.detailDesc.setText(roomVO.getData().getRM_DESC());
+        CommonUtil.setGlideImage(MainAct.this,Common.BASEFILEURL + roomVO.getData().getMEMBER_ID()+".jpg", binding.includeMain.profilePhoto);
 
         if(roomVO.getData().getFILE_LIST() != null && roomVO.getData().getFILE_LIST().size() > 0){
             binding.includeMain.content.pager.setVisibility(View.VISIBLE);
@@ -576,14 +604,21 @@ public class MainAct extends BaseLogin implements OnMapReadyCallback{
         }
     };
 
+
     private void drawMarker(FeedVO.Feed item){
         double lat = Double.valueOf(item.getLAT());
         double lon = Double.valueOf(item.getLON());
         LatLng currentGeo = new LatLng(lat, lon);
-
-        gMap.addMarker(new MarkerOptions().position(currentGeo).title(getJsonObjectItem(item)).icon(BitmapDescriptorFactory.fromBitmap(createDrawableFromView(this, marker_root_view,item.getGUBUN(),item.getCOMMENT_CNT()))));
-        CameraUpdate cu = CameraUpdateFactory.newLatLngZoom(currentGeo, (float)17.0);
-        //gMap.moveCamera(cu);
+        ClusterVO items = new ClusterVO();
+        items.setLocation(currentGeo);
+        mClsterMa.addItem(items);
+       /* gMap.addMarker(
+                new MarkerOptions()
+                        .position(currentGeo)
+                        .title(getJsonObjectItem(item))
+                        .icon(BitmapDescriptorFactory.fromBitmap(createDrawableFromView(this, marker_root_view,item.getGUBUN(),item.getCOMMENT_CNT())))
+                        .flat(true)
+        );*/
     }
 
 
@@ -602,10 +637,18 @@ public class MainAct extends BaseLogin implements OnMapReadyCallback{
         return obj.toString();
     }
 
+    ClusterManager<ClusterVO> mClsterMa = null;
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         if (gMap == null) {
             gMap = googleMap;
+            mClsterMa = new ClusterManager<ClusterVO>(this,gMap);
+            MyClusterRenderer mcr = new MyClusterRenderer(this,gMap,mClsterMa);
+            mcr.setClusterView(LayoutInflater.from(this).inflate(R.layout.cluster, null));
+            mClsterMa.setRenderer(mcr);
+            gMap.setOnCameraIdleListener(mClsterMa);
+            gMap.setOnMarkerClickListener(mClsterMa);
             setUpMap();
         }
 
@@ -615,10 +658,11 @@ public class MainAct extends BaseLogin implements OnMapReadyCallback{
             location.getLocation(MainAct.this,locationResult);
         }else{
             //drawMarker(KoreaTown.myLocation);
+
             String LAT = String.valueOf(KoreaTown.myLocation.getLatitude());
             String LON = String.valueOf(KoreaTown.myLocation.getLongitude());
             LatLng latlng = new LatLng(KoreaTown.myLocation.getLatitude(),KoreaTown.myLocation.getLongitude());
-            CameraUpdate cu = CameraUpdateFactory.newLatLngZoom(latlng, (float)15.0);
+            CameraUpdate cu = CameraUpdateFactory.newLatLngZoom(latlng, (float)13.0);
             gMap.moveCamera(cu);
             getList(LAT,LON);
         }
@@ -650,7 +694,7 @@ public class MainAct extends BaseLogin implements OnMapReadyCallback{
     private void setUI(FeedVO item){
         if(item == null ) return;
         gMap.clear();
-      //  mClusterManage.clearItems();
+        mClsterMa.clearItems();
         ArrayList<FeedVO.Feed> list = item.getData();
         for(int i = 0 ; i < list.size(); i++){
             //ClusterVO vo = new ClusterVO();
@@ -659,8 +703,6 @@ public class MainAct extends BaseLogin implements OnMapReadyCallback{
             drawMarker(list.get(i));
         }
     }
-
-
 
     private Bitmap createDrawableFromView(Context context, View view,String gubun,String cnt) {
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -745,7 +787,7 @@ public class MainAct extends BaseLogin implements OnMapReadyCallback{
                 setUI(Item);
                 markerClickFlag =! markerClickFlag;
             }else{
-                finish();
+                CommonUtil.ShowExitToast(this);
             }
         }
     }
