@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            tools:showIn="@layout/feedlist">
+
+            <android.support.design.widget.AppBarLayout
+                android:id="@+id/app_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/AppTheme.AppBarOverlay">
+
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:background="?attr/colorPrimary"
+                    app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+            </android.support.design.widget.AppBarLayout>
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fillViewport="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/click_detail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#333333"
+                        android:orientation="vertical"
+                        android:padding="10dip">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:id="@+id/detail_icon"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/icon_house_wh" />
+
+                            <TextView
+                                android:id="@+id/detail_date"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignBottom="@id/detail_icon"
+                                android:layout_marginLeft="10dip"
+                                android:layout_toRightOf="@id/detail_icon"
+                                android:text="정보가 없습니다."
+                                android:textColor="#ffffff" />
+
+                            <TextView
+                                android:id="@+id/detail_time"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignBottom="@id/detail_icon"
+                                android:layout_marginLeft="5dip"
+                                android:layout_toRightOf="@id/detail_date"
+                                android:text="정보가 없습니다."
+                                android:textColor="#ffffff" />
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dip">
+
+                            <ImageView
+                                android:id="@+id/profilePhoto"
+                                android:layout_width="60dip"
+                                android:layout_height="60dip"
+                                android:layout_alignParentRight="true"
+                                android:src="@drawable/photo_frame" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_toLeftOf="@id/profilePhoto"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/detail_room_info"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="정보가 없습니다."
+                                    android:textColor="#ffffff"
+                                    android:textSize="20sp" />
+
+                                <TextView
+                                    android:id="@+id/detail_room_addr"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="정보가 없습니다."
+                                    android:textColor="#ffffff"
+                                    android:textSize="15sp" />
+                            </LinearLayout>
+
+                        </RelativeLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_gravity="bottom"
+                        android:background="#333333"
+                        android:orientation="vertical"
+                        android:padding="10dip">
+
+                        <TextView
+                            android:id="@+id/detail_desc"
+                            style="@style/BaseTextView"
+                            android:text="정보가 없습니다."
+                            android:textSize="15sp" />
+
+                        <android.support.v4.view.ViewPager
+                            android:id="@+id/pager"
+                            android:layout_width="match_parent"
+                            android:layout_height="150dip"
+                            android:layout_marginTop="20dip" />
+
+                        <TextView
+                            android:id="@+id/detail_content_price"
+                            style="@style/BaseTextView"
+                            android:text="정보가 없습니다." />
+
+                        <TextView
+                            android:id="@+id/detail_content_room"
+                            style="@style/BaseTextView"
+                            android:text="정보가 없습니다." />
+
+
+                        <TextView
+                            android:id="@+id/detail_content_bath"
+                            style="@style/BaseTextView"
+                            android:text="정보가 없습니다." />
+
+                        <TextView
+                            android:id="@+id/detail_content_cnt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dip"
+                            android:text="Comment (2)"
+                            android:textColor="#ffffff" />
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/detail_content_recyler"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dip">
+
+                        </android.support.v7.widget.RecyclerView>
+                        <Button
+                            android:id="@+id/detail_content_cmtbtn"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:text="코멘트등록" />
+
+                    </LinearLayout>
+                </LinearLayout>
+            </ScrollView>
+        </LinearLayout>
+
+    </android.support.design.widget.CoordinatorLayout>
+
+</layout>
