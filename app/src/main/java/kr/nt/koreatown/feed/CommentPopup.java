@@ -94,17 +94,6 @@ public class CommentPopup extends Activity {
                     // BusProvider.getInstance().post(new RefreshViewEvent());
                     BusProvider.getInstance().post(new RefreshDetailViewEvent());
                     finish();
-                    /*CommonUtil.showOnBtnDialog(CommentPopup.this, "코멘트", "코멘트등록이 완료되었습니다.", new CommonUtil.onDialogClick() {
-                        @Override
-                        public void setonConfirm() {
-
-                        }
-
-                        @Override
-                        public void setonCancel() {
-
-                        }
-                    });*/
 
                 }
             }

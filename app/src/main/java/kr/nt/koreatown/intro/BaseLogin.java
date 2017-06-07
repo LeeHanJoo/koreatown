@@ -370,9 +370,7 @@ public class BaseLogin extends AppCompatActivity {
                         memberVO.setPASSWORD(PASSWORD);
                         memberVO.setMEMBER_TYPE(loginType);
                         BusProvider.getInstance().post(new LoginEvent(memberVO));
-                       /* Intent intent = new Intent(BaseLogin.this, MainAct.class);
-                        startActivity(intent);
-                        finish();*/
+
                     }else if(item.getResult().equals("2") || item.getResult().equals("3")){ // 무조건 로그인 api 재호출
                         doOnlyLogin(ID,PASSWORD,loginType);
                     }else{

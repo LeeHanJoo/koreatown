@@ -10,6 +10,15 @@ import com.google.maps.android.clustering.ClusterItem;
 public class ClusterVO implements ClusterItem {
 
     private LatLng location;
+    private FeedVO.Feed feed;
+
+    public FeedVO.Feed getFeed() {
+        return feed;
+    }
+
+    public void setFeed(FeedVO.Feed feed) {
+        this.feed = feed;
+    }
 
     public LatLng getLocation() {
         return location;

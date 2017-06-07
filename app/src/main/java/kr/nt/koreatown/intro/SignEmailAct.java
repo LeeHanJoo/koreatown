@@ -4,7 +4,6 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -19,6 +18,7 @@ import kr.nt.koreatown.R;
 import kr.nt.koreatown.databinding.SignEmailBinding;
 import kr.nt.koreatown.retrofit.RetrofitAdapter;
 import kr.nt.koreatown.retrofit.RetrofitUtil;
+import kr.nt.koreatown.util.CommonUtil;
 import kr.nt.koreatown.util.Utils;
 import kr.nt.koreatown.vo.MsgVO;
 import okhttp3.RequestBody;
@@ -232,8 +232,9 @@ public class SignEmailAct extends BaseLogin{
                 if(result != null ){
                     if(result.getResult().equals("1")){ // 성공
                         doLogin(ID,PASSWORD,Common.TYPE_EMAIL);
+                        finish();
                     }else{
-
+                        CommonUtil.showOnBtnDialog(SignEmailAct.this,"회원가입실패",result.getData().getMsg(),null);
                     }
                 }
 
@@ -241,7 +242,7 @@ public class SignEmailAct extends BaseLogin{
 
             @Override
             public void onFailure(Call<MsgVO> call, Throwable t) {
-                Log.e("","");
+                CommonUtil.showOnBtnDialog(SignEmailAct.this,"회원가입실패",getString(R.string.server_err),null);
             }
         });
     }

@@ -1,5 +1,6 @@
 package kr.nt.koreatown.vo;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -20,7 +21,7 @@ public class FeedVO {
 
 
 
-    public class Feed /*implements ClusterItem*/{
+    public class Feed implements Serializable{
         public String GUBUN;
         public String SEQ;
         public String MEMBER_ID;

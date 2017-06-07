@@ -71,6 +71,18 @@
             android:name=".setting.MyProfileAct"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden" />
+
+        <activity
+            android:name=".main.FeedList"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+
+        <activity
+            android:name=".feed.FeedDetailAct"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+
+
         <activity
             android:name=".feed.CommentPopup"
             android:screenOrientation="portrait"

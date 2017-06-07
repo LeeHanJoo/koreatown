@@ -90,9 +90,12 @@ public class SplashActivity extends AppCompatActivity {
                 KoreaTown.myLocation = location;
                // mlocation.LocationDestory();
               //  Intent intent = new Intent(SplashActivity.this,LoginAct.class);
-                Intent intent = new Intent(SplashActivity.this,MainAct.class);
-                startActivity(intent);
-                finish();
+                if(MainAct.getInstance() == null){
+                    Intent intent = new Intent(SplashActivity.this,MainAct.class);
+                    startActivity(intent);
+                    finish();
+                }
+
             }
         }
     };
