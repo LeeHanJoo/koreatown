@@ -27,7 +27,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -300,7 +299,12 @@ public class MainAct extends BaseLogin implements OnMapReadyCallback{
         mClsterMa.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<ClusterVO>() {
             @Override
             public boolean onClusterItemClick(ClusterVO clusterVO) {
-                Toast.makeText(MainAct.this,"몇개 22" + clusterVO.getPosition(),Toast.LENGTH_SHORT).show();
+                mClickMarker = clusterVO.getFeed();
+                Intent intent = new Intent(MainAct.this, FeedDetailAct.class);
+                intent.putExtra("feed",mClickMarker);
+                startActivity(intent);
+
+                //Toast.makeText(MainAct.this,"몇개 22" + clusterVO.getPosition(),Toast.LENGTH_SHORT).show();
                 return true;
             }
         });
@@ -863,6 +867,7 @@ public class MainAct extends BaseLogin implements OnMapReadyCallback{
         public void onBindViewHolder(final ViewHolder holder,final int position) {
             RoomVO.Room.Comment item = items.get(position);
             holder.itemBinding.setComment(item);
+            CommonUtil.setGlideImage(MainAct.this,Common.BASEFILEURL + item.getMEMBER_ID() +".jpg", holder.itemBinding.itemProfileImg);
         }
 
 

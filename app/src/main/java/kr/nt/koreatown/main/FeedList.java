@@ -16,9 +16,12 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
+import kr.nt.koreatown.Common;
 import kr.nt.koreatown.R;
 import kr.nt.koreatown.databinding.FeedItemBinding;
 import kr.nt.koreatown.databinding.FeedlistBinding;
+import kr.nt.koreatown.util.CommonUtil;
+import kr.nt.koreatown.util.Utils;
 import kr.nt.koreatown.vo.FeedVO;
 
 /**
@@ -52,6 +55,8 @@ public class FeedList extends AppCompatActivity {
         binding.recylerview.setLayoutManager(manager);
         binding.recylerview.setAdapter(new RecyclerAdapter(this, arraylist, R.layout.mainact));
 
+        binding.itemCnt.setText(String.valueOf(arraylist.size()));
+
     }
 
 
@@ -76,21 +81,34 @@ public class FeedList extends AppCompatActivity {
         public void onBindViewHolder(final ViewHolder holder,final int position) {
             final FeedVO.Feed item = items.get(position);
             if(item.getGUBUN().equals("R")){
-                holder.itemBinding.itemFeedTypeImg.setImageResource(R.drawable.icon_house);
+                holder.itemBinding.detailIcon.setImageResource(R.drawable.icon_house_wh);
             }else{
-                holder.itemBinding.itemFeedTypeImg.setImageResource(R.drawable.icon_news);
+                holder.itemBinding.detailIcon.setImageResource(R.drawable.icon_news);
+            }
+            holder.itemBinding.detailDate.setText(Utils.CreateDataWithCheck(item.getCREATE_DATE()));
+            holder.itemBinding.detailTime.setText(getTimeLimit(item.getTIME_MINUTE()));
+            holder.itemBinding.detailRoomAddr.setText(String.format("%s , %s",item.getADDR2(),item.getADDR1()));
+
+
+            if(item.getGUBUN().equals("R")){
+                String[] info = item.getDESCS().split("-");
+                holder.itemBinding.detailRoomInfo.setText(String.format("%s room , %s bathroom",info[0],info[1]));
+            }else{
+                holder.itemBinding.detailRoomInfo.setText(item.getDESCS());
             }
 
-            if(item.getCOMMENT_CNT() == null || item.getCOMMENT_CNT().length() == 0 || item.getCOMMENT_CNT().equals("0")){
+            CommonUtil.setGlideImage(FeedList.this, Common.BASEFILEURL + item.getMEMBER_ID()+".jpg", holder.itemBinding.profilePhoto);
+
+         /*   if(item.getCOMMENT_CNT() == null || item.getCOMMENT_CNT().length() == 0 || item.getCOMMENT_CNT().equals("0")){
                 holder.itemBinding.cnt.setVisibility(View.GONE);
             }else{
                 holder.itemBinding.cnt.setVisibility(View.VISIBLE);
                 holder.itemBinding.cnt.setText(item.getCOMMENT_CNT());
-            }
+            }*/
 
-            holder.itemBinding.itemWriter.setText(item.getMEMBER_ID());
+           // holder.itemBinding.itemWriter.setText(item.getMEMBER_ID());
 
-            holder.itemBinding.itemLayout.setOnClickListener(new View.OnClickListener() {
+            holder.itemBinding.clickDetail.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent();
@@ -103,7 +121,17 @@ public class FeedList extends AppCompatActivity {
            // holder.itemBinding.setComment(item);
         }
 
+        public String getTimeLimit(String time){
+            int limitTime = Integer.valueOf(time);
+            if(limitTime > 60){
+                int timeHour = limitTime / 60 ;
+                int timeMinute = limitTime % 60;
+                return String.format("%d시간 %d분 후에 사라집니다.",timeHour,timeMinute);
+            } else {
+                return String.format("%d분 후에 사라집니다.",limitTime);
+            }
 
+        }
 
         @Override
         public int getItemCount() {

@@ -61,7 +61,22 @@ public class FeedDetailAct extends AppCompatActivity {
         binding.toolbar.setBackgroundColor(Utils.getColor(FeedDetailAct.this,R.color.colorToolbar));
         item = (FeedVO.Feed)getIntent().getSerializableExtra("feed");
         BusProvider.getInstance().register(this);
-        getRoomDetail(false);
+        if(item.getGUBUN().equals("R")){
+            getRoomDetail(false);
+        }else{
+            CommonUtil.showOnBtnDialog(this, null, "소식 상세화면은 준비중", new CommonUtil.onDialogClick() {
+                @Override
+                public void setonConfirm() {
+                    finish();
+                }
+
+                @Override
+                public void setonCancel() {
+
+                }
+            });
+        }
+
     }
 
 
@@ -196,6 +211,7 @@ public class FeedDetailAct extends AppCompatActivity {
         public void onBindViewHolder(final ViewHolder holder,final int position) {
             RoomVO.Room.Comment item = items.get(position);
             holder.itemBinding.setComment(item);
+            CommonUtil.setGlideImage(context,Common.BASEFILEURL + item.getMEMBER_ID() +".jpg", holder.itemBinding.itemProfileImg);
         }
 
 
@@ -218,4 +234,15 @@ public class FeedDetailAct extends AppCompatActivity {
             }
         }
     }
+
+
+    public boolean onOptionsItemSelected(android.view.MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // NavUtils.navigateUpFromSameTask(this);
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    };
 }

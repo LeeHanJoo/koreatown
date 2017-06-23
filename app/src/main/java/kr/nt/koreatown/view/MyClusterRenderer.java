@@ -71,7 +71,7 @@ public class MyClusterRenderer extends DefaultClusterRenderer<ClusterVO> {
 
     @Override
     protected boolean shouldRenderAsCluster(Cluster<ClusterVO> cluster) {
-        return cluster.getSize() > 0;
+        return cluster.getSize() > 1;
     }
 
     @Override

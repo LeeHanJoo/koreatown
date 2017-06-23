@@ -29,6 +29,51 @@ public class FeedVO {
         public String LON;
         public String DISTANCE;
         public String COMMENT_CNT;
+        public String CREATE_DATE;
+        public String TIME_MINUTE;
+        public String ADDR1;
+        public String ADDR2;
+        public String DESCS;
+
+        public String getDESCS() {
+            return DESCS;
+        }
+
+        public void setDESCS(String DESCS) {
+            this.DESCS = DESCS;
+        }
+
+        public String getADDR1() {
+            return ADDR1;
+        }
+
+        public void setADDR1(String ADDR1) {
+            this.ADDR1 = ADDR1;
+        }
+
+        public String getADDR2() {
+            return ADDR2;
+        }
+
+        public void setADDR2(String ADDR2) {
+            this.ADDR2 = ADDR2;
+        }
+
+        public String getTIME_MINUTE() {
+            return TIME_MINUTE;
+        }
+
+        public void setTIME_MINUTE(String TIME_MINUTE) {
+            this.TIME_MINUTE = TIME_MINUTE;
+        }
+
+        public String getCREATE_DATE() {
+            return CREATE_DATE;
+        }
+
+        public void setCREATE_DATE(String CREATE_DATE) {
+            this.CREATE_DATE = CREATE_DATE;
+        }
 
         public String getGUBUN() {
             return GUBUN;

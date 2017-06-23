@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -88,7 +87,8 @@ public class SignEmailAct extends BaseLogin{
             binding.inputId.hasFocus();
             Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
             binding.inputId.startAnimation(shake);
-            Toast.makeText(this,"아이디를 입력해주세요.",Toast.LENGTH_SHORT).show();
+            CommonUtil.showOnBtnDialog(this,null,"아이디를 입력해주세요",null);
+            //Toast.makeText(this,"아이디를 입력해주세요.",Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -96,7 +96,8 @@ public class SignEmailAct extends BaseLogin{
             binding.inputEmail.hasFocus();
             Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
             binding.inputEmail.startAnimation(shake);
-            Toast.makeText(this,"이메일주소를 입력해주세요.",Toast.LENGTH_SHORT).show();
+            CommonUtil.showOnBtnDialog(this,null,"이메일주소를 입력해주세요",null);
+            //Toast.makeText(this,"이메일주소를 입력해주세요.",Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -104,7 +105,8 @@ public class SignEmailAct extends BaseLogin{
             binding.inputEmail.hasFocus();
             Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
             binding.inputEmail.startAnimation(shake);
-            Toast.makeText(this,"이메일주소를 정확히 입력해주세요.",Toast.LENGTH_SHORT).show();
+            CommonUtil.showOnBtnDialog(this,null,"이메일주소를 정확히 입력해주세요",null);
+           // Toast.makeText(this,"이메일주소를 정확히 입력해주세요.",Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -112,7 +114,8 @@ public class SignEmailAct extends BaseLogin{
             binding.inputNick.hasFocus();
             Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
             binding.inputNick.startAnimation(shake);
-            Toast.makeText(this,"닉네임을 입력해주세요.",Toast.LENGTH_SHORT).show();
+            CommonUtil.showOnBtnDialog(this,null,"닉네임을 입력해주세요",null);
+            //Toast.makeText(this,"닉네임을 입력해주세요.",Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -120,7 +123,8 @@ public class SignEmailAct extends BaseLogin{
             binding.inputPw.hasFocus();
             Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
             binding.inputPw.startAnimation(shake);
-            Toast.makeText(this,"비밀번호를 입력해주세요.",Toast.LENGTH_SHORT).show();
+            CommonUtil.showOnBtnDialog(this,null,"비밀번호를 입력해주세요",null);
+           // Toast.makeText(this,"비밀번호를 입력해주세요.",Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -128,7 +132,8 @@ public class SignEmailAct extends BaseLogin{
             binding.inputPw.hasFocus();
             Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
             binding.inputPw.startAnimation(shake);
-            Toast.makeText(this,"비밀번호는 6자리이상 입력하셔야합니다",Toast.LENGTH_SHORT).show();
+            CommonUtil.showOnBtnDialog(this,null,"비밀번호는 6자리이상 입력하셔야합니다",null);
+            //Toast.makeText(this,"비밀번호는 6자리이상 입력하셔야합니다",Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -136,7 +141,8 @@ public class SignEmailAct extends BaseLogin{
             binding.inputPw.hasFocus();
             Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
             binding.inputPw.startAnimation(shake);
-            Toast.makeText(this,"비밀번호는 6자리이상 15이하 영문,숫자,특수문자를 포함하여야합니다.",Toast.LENGTH_SHORT).show();
+            CommonUtil.showOnBtnDialog(this,null,"비밀번호는 6자리이상 15이하 영문,숫자,특수문자를 포함하여야합니다",null);
+            //Toast.makeText(this,"비밀번호는 6자리이상 15이하 영문,숫자,특수문자를 포함하여야합니다.",Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -144,7 +150,8 @@ public class SignEmailAct extends BaseLogin{
             binding.inputPw2.hasFocus();
             Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
             binding.inputPw2.startAnimation(shake);
-            Toast.makeText(this,"비밀번호를 한번더 입력해주세요.",Toast.LENGTH_SHORT).show();
+            CommonUtil.showOnBtnDialog(this,null,"비밀번호를 한번더 입력해주세요",null);
+           // Toast.makeText(this,"비밀번호를 한번더 입력해주세요.",Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -152,7 +159,8 @@ public class SignEmailAct extends BaseLogin{
             binding.inputPw2.hasFocus();
             Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
             binding.inputPw2.startAnimation(shake);
-            Toast.makeText(this,"비밀번호는 6자리이상 입력하셔야합니다",Toast.LENGTH_SHORT).show();
+            CommonUtil.showOnBtnDialog(this,null,"비밀번호는 6자리이상 입력하셔야합니다",null);
+            //Toast.makeText(this,"비밀번호는 6자리이상 입력하셔야합니다",Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -160,7 +168,8 @@ public class SignEmailAct extends BaseLogin{
             binding.inputPw2.hasFocus();
             Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
             binding.inputPw2.startAnimation(shake);
-            Toast.makeText(this,"비밀번호는 6자리이상 15이하 영문,숫자,특수문자를 포함하여야합니다.",Toast.LENGTH_SHORT).show();
+            CommonUtil.showOnBtnDialog(this,null,"비밀번호는 6자리이상 15이하 영문,숫자,특수문자를 포함하여야합니다",null);
+           // Toast.makeText(this,"비밀번호는 6자리이상 15이하 영문,숫자,특수문자를 포함하여야합니다.",Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -168,7 +177,8 @@ public class SignEmailAct extends BaseLogin{
             binding.inputPw2.hasFocus();
             Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
             binding.inputPw2.startAnimation(shake);
-            Toast.makeText(this,"비밀번호가 다릅니다. 정확히 입력해주세요.",Toast.LENGTH_SHORT).show();
+            CommonUtil.showOnBtnDialog(this,null,"비밀번호가 다릅니다. 정확히 입력해주세요",null);
+            //Toast.makeText(this,"비밀번호가 다릅니다. 정확히 입력해주세요.",Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -176,7 +186,8 @@ public class SignEmailAct extends BaseLogin{
             binding.inputBirth.hasFocus();
             Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
             binding.inputBirth.startAnimation(shake);
-            Toast.makeText(this,"생년월일을 입력해주세요.",Toast.LENGTH_SHORT).show();
+            CommonUtil.showOnBtnDialog(this,null,"생년월일을 입력해주세요",null);
+            //Toast.makeText(this,"생년월일을 입력해주세요.",Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -184,17 +195,20 @@ public class SignEmailAct extends BaseLogin{
             binding.inputBirth.hasFocus();
             Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
             binding.inputBirth.startAnimation(shake);
-            Toast.makeText(this,"생년월일을 정확히 입력해주세요.",Toast.LENGTH_SHORT).show();
+            CommonUtil.showOnBtnDialog(this,null,"생년월일을 정확히 입력해주세요",null);
+            //Toast.makeText(this,"생년월일을 정확히 입력해주세요.",Toast.LENGTH_SHORT).show();
             return;
         }
 
         if(mSex.isEmpty() || mSex.length() == 0){
-            Toast.makeText(this,"성별을 입력해주세요.",Toast.LENGTH_SHORT).show();
+            CommonUtil.showOnBtnDialog(this,null,"성별을 입력해주세요",null);
+            //Toast.makeText(this,"성별을 입력해주세요.",Toast.LENGTH_SHORT).show();
             return;
         }
 
         if(!binding.termsCheck.isChecked()){
-            Toast.makeText(this,"약관 동의를 체크해주세요.",Toast.LENGTH_SHORT).show();
+            CommonUtil.showOnBtnDialog(this,null,"약관 동의를 체크해주세요",null);
+            //Toast.makeText(this,"약관 동의를 체크해주세요.",Toast.LENGTH_SHORT).show();
             return;
         }
 
