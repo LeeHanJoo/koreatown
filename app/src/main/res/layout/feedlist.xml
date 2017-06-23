@@ -10,6 +10,7 @@
         android:fitsSystemWindows="true">
 
         <LinearLayout
+            android:background="#333333"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -31,8 +32,35 @@
 
             </android.support.design.widget.AppBarLayout>
 
+            <LinearLayout
+                android:padding="10dip"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/item_cnt"
+                    android:gravity="center"
+                    android:textColor="#ffffff"
+                    android:text="2"
+                    android:textSize="15sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/icon_notification"/>
+
+                <TextView
+                    android:textColor="#ffffff"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" 개의 정보가 있습니다."/>
+            </LinearLayout>
+
+
+
 
             <android.support.v7.widget.RecyclerView
+                android:layout_marginTop="10dip"
                 android:id="@+id/recylerview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

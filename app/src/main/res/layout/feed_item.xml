@@ -7,78 +7,89 @@
             type="kr.nt.koreatown.vo.RoomVO.Room.Comment"/>
     </data>-->
 
-    <RelativeLayout
-        android:id="@+id/item_layout"
+
+    <LinearLayout
+        android:id="@+id/click_detail"
         android:layout_width="match_parent"
-        android:layout_height="70dip"
+        android:layout_height="wrap_content"
+        android:background="#333333"
         android:orientation="vertical"
-        android:padding="10dip"
-        android:background="#333333">
+        android:padding="10dip">
 
-
-        <ImageView
-            android:id="@+id/item_feed_type_img"
-            android:layout_width="50dip"
-            android:layout_height="50dip"
-            android:src="@drawable/icon_house" />
-
-        <TextView
-            android:id="@+id/cnt"
-            android:layout_marginLeft="38dip"
-            android:textColor="#ffffff"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/icon_notification"
-            android:gravity="center"
-            android:text=""
-            android:textSize="16sp" />
-
-
-
-
-        <LinearLayout
-            android:layout_marginLeft="10dip"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_toRightOf="@id/item_feed_type_img"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:layout_height="wrap_content">
 
-            <TextView
-                android:textColor="#ffffff"
-                android:id="@+id/item_writer"
+            <ImageView
+                android:id="@+id/detail_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="이한주" />
+                android:src="@drawable/icon_house_wh" />
 
-           <!-- <LinearLayout
-                android:layout_marginTop="3dip"
+            <TextView
+                android:id="@+id/detail_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/detail_icon"
+                android:layout_marginLeft="10dip"
+                android:layout_toRightOf="@id/detail_icon"
+                android:text="정보가 없습니다."
+                android:textColor="#ffffff" />
+
+            <TextView
+                android:id="@+id/detail_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/detail_icon"
+                android:layout_marginLeft="5dip"
+                android:layout_toRightOf="@id/detail_date"
+                android:text="정보가 없습니다."
+                android:textColor="#ffffff" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dip">
+
+            <ImageView
+                android:id="@+id/profilePhoto"
+                android:layout_width="60dip"
+                android:layout_height="60dip"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/photo_frame" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/profilePhoto"
+                android:orientation="vertical">
 
                 <TextView
-                    android:textColor="#ffffff"
-                    android:id="@+id/item_create_id"
+                    android:id="@+id/detail_room_info"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{comment.MEMBER_NICK}" />
+                    android:text="정보가 없습니다."
+                    android:textColor="#ffffff"
+                    android:textSize="20sp" />
 
                 <TextView
-                    android:textColor="#ffffff"
+                    android:id="@+id/detail_room_addr"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=" | " />
-
-                <TextView
+                    android:text="정보가 없습니다."
                     android:textColor="#ffffff"
-                    android:id="@+id/item_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@{comment.CREATE_DATE}" />
-            </LinearLayout>-->
+                    android:textSize="15sp" />
+            </LinearLayout>
 
-        </LinearLayout>
+        </RelativeLayout>
 
-    </RelativeLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:background="#ffffff"/>
+    </LinearLayout>
+
 
 </layout>
