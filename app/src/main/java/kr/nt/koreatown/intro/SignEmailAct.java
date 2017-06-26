@@ -1,5 +1,6 @@
 package kr.nt.koreatown.intro;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
@@ -245,7 +246,12 @@ public class SignEmailAct extends BaseLogin{
                 MsgVO result = response.body();
                 if(result != null ){
                     if(result.getResult().equals("1")){ // 성공
-                        doLogin(ID,PASSWORD,Common.TYPE_EMAIL);
+                      //  doLogin(ID,PASSWORD,Common.TYPE_EMAIL);
+                        Intent intent = new Intent(SignEmailAct.this,SignComple.class);
+                        intent.putExtra(Common.ID,ID);
+                        intent.putExtra(Common.PASSWORD,PASSWORD);
+                        intent.putExtra(Common.TYPE,Common.TYPE_EMAIL);
+                        startActivity(intent);
                         finish();
                     }else{
                         CommonUtil.showOnBtnDialog(SignEmailAct.this,"회원가입실패",result.getData().getMsg(),null);

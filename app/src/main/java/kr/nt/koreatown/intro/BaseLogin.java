@@ -97,6 +97,7 @@ public class BaseLogin extends AppCompatActivity {
 
     public void isKakaoLogin() {
         // 카카오 세션을 오픈한다
+
         mKakaocallback = new ISessionCallback() {
             @Override
             public void onSessionOpened() {
@@ -222,7 +223,7 @@ public class BaseLogin extends AppCompatActivity {
         params.put(Common.PASSWORD,RetrofitUtil.toRequestBody(PASSWORD));
         //params.put(BIRTHDAY,RetrofitUtil.toRequestBody(BIRTHDAY));
 
-        params.put(NICK_NAME,RetrofitUtil.toRequestBody(NICK_NAME));
+        params.put(Common.NICK_NAME,RetrofitUtil.toRequestBody(NICK_NAME));
       //  params.put(SEX,RetrofitUtil.toRequestBody(SEX));
         params.put(Common.PUSH_KEY,RetrofitUtil.toRequestBody(PUSH_KEY));
 
@@ -245,6 +246,7 @@ public class BaseLogin extends AppCompatActivity {
                     }else if(result.getResult().equals("2")){ // 이미아이디있음 로그인 시도
                         doLogin(ID,PASSWORD,Common.TYPE_KAKAO);
                     }else{
+                        CommonUtil.showOnBtnDialog(BaseLogin.this,"서버오류","잠시후 다시시도해주세요",null);
                         //CommonUtil.showOnBtnDialog(BaseLogin.this,"카카오로그인",item.getData().getMsg(),null);
                     }
                 }
@@ -253,6 +255,7 @@ public class BaseLogin extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<MsgVO> call, Throwable t) {
+                CommonUtil.showOnBtnDialog(BaseLogin.this,"서버오류","잠시후 다시시도해주세요",null);
                 Log.e("","");
             }
         });

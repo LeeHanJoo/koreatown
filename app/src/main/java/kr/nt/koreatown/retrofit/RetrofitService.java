@@ -75,6 +75,9 @@ public interface RetrofitService {
     @GET("/mobile/m_room_detail")
     public Call<JsonElement> getRoomDetail(@Query("SEQ")  String SEQ);
 
+    @GET("/mobile/m_story_detail")
+    public Call<JsonElement> getStoryDetail(@Query("SEQ")  String SEQ);
+
     @Multipart
     @POST("/mobile/m_comment_ins")
     public Call<MsgVO> postComment(@PartMap Map<String, RequestBody> params);

@@ -20,6 +20,7 @@ import kr.nt.koreatown.Common;
 import kr.nt.koreatown.R;
 import kr.nt.koreatown.databinding.FeedItemBinding;
 import kr.nt.koreatown.databinding.FeedlistBinding;
+import kr.nt.koreatown.feed.FeedDetailAct;
 import kr.nt.koreatown.util.CommonUtil;
 import kr.nt.koreatown.util.Utils;
 import kr.nt.koreatown.vo.FeedVO;
@@ -49,6 +50,7 @@ public class FeedList extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        binding.toolbar.setBackgroundColor(Utils.getColor(FeedList.this,R.color.colorToolbar));
         arraylist = (ArrayList<FeedVO.Feed>) getIntent().getSerializableExtra("arraylist");
         LinearLayoutManager manager = new LinearLayoutManager(this);
         binding.recylerview.setHasFixedSize(true);
@@ -83,7 +85,7 @@ public class FeedList extends AppCompatActivity {
             if(item.getGUBUN().equals("R")){
                 holder.itemBinding.detailIcon.setImageResource(R.drawable.icon_house_wh);
             }else{
-                holder.itemBinding.detailIcon.setImageResource(R.drawable.icon_news);
+                holder.itemBinding.detailIcon.setImageResource(R.drawable.icon_news_wh);
             }
             holder.itemBinding.detailDate.setText(Utils.CreateDataWithCheck(item.getCREATE_DATE()));
             holder.itemBinding.detailTime.setText(getTimeLimit(item.getTIME_MINUTE()));
@@ -111,10 +113,13 @@ public class FeedList extends AppCompatActivity {
             holder.itemBinding.clickDetail.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent();
+                    Intent intent = new Intent(context, FeedDetailAct.class);
                     intent.putExtra("feed",item);
-                    setResult(RESULT_OK,intent);
-                    finish();
+                    startActivity(intent);
+                   // Intent intent = new Intent();
+                   // intent.putExtra("feed",item);
+                   // setResult(RESULT_OK,intent);
+                   // finish();
                 }
             });
             //RoomVO.Room.Comment item = items.get(position);

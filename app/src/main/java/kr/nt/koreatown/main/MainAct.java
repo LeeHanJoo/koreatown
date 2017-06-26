@@ -290,8 +290,8 @@ public class MainAct extends BaseLogin implements OnMapReadyCallback{
                 Intent intent = new Intent(MainAct.this,FeedList.class);
                 intent.putExtra("arraylist",arraylist);
                 //FeedList.setList(arraylist);
-                startActivityForResult(intent,FeedList.REQUEST_FEED);
-                //startActivity(intent);
+               // startActivityForResult(intent,FeedList.REQUEST_FEED);
+                startActivity(intent);
 
                 return true;
             }

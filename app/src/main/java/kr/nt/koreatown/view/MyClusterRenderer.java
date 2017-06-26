@@ -126,7 +126,13 @@ public class MyClusterRenderer extends DefaultClusterRenderer<ClusterVO> {
         ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 
         TextView cntView = (TextView)view.findViewById(R.id.cnt);
-        cntView.setText(""+cnt);
+        int intCnt = Integer.valueOf(cnt);
+        if(intCnt >= 100){
+            cntView.setText("99+");
+        }else{
+            cntView.setText(""+cnt);
+        }
+
 
         view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)); view.measure(displayMetrics.widthPixels, displayMetrics.heightPixels); view.layout(0, 0, displayMetrics.widthPixels, displayMetrics.heightPixels); view.buildDrawingCache();
         Bitmap bitmap = Bitmap.createBitmap(view.getMeasuredWidth(), view.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
