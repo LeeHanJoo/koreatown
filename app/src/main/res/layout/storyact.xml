@@ -60,9 +60,11 @@
                 </LinearLayout>
 
                 <EditText
+                    android:layout_marginRight="10dip"
+                    android:layout_marginLeft="10dip"
                     android:id="@+id/story_edit"
                     android:layout_marginTop="10dip"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:background="@drawable/textarea"
