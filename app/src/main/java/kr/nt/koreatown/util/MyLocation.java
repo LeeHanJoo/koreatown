@@ -26,7 +26,9 @@ public class MyLocation {
     Context context;
 
     public void LocationDestory(){
-        locationResult = null;
+       // locationResult = null;
+        lm.removeUpdates(locationListenerGps);
+        lm.removeUpdates(locationListenerNetwork);
     }
 
     public boolean getLocation(Context context, LocationResult result) {
@@ -69,14 +71,14 @@ public class MyLocation {
             provide="gps";
         }
 
-        timer1 = new Timer();
-        timer1.schedule(new GetLastLocation(), 20000);
+       // timer1 = new Timer();
+       // timer1.schedule(new GetLastLocation(), 20000);
         return true;
     }
 
     LocationListener locationListenerGps = new LocationListener() {
         public void onLocationChanged(Location location) {
-            timer1.cancel();
+          //  timer1.cancel();
             if(locationResult != null)
             locationResult.gotLocation(location);
 
@@ -99,7 +101,7 @@ public class MyLocation {
 
     LocationListener locationListenerNetwork = new LocationListener() {
         public void onLocationChanged(Location location) {
-            timer1.cancel();
+           // timer1.cancel();
             if(locationResult != null)
                 locationResult.gotLocation(location);
             try {
@@ -142,22 +144,28 @@ public class MyLocation {
             if(locationResult == null) return;
             //if there are both values use the latest one
             if (gps_loc != null && net_loc != null) {
-                if (gps_loc.getTime() > net_loc.getTime())
+                if (gps_loc.getTime() > net_loc.getTime()){
                     locationResult.gotLocation(gps_loc);
-                else
+                    locationResult = null;
+                } else{
                     locationResult.gotLocation(net_loc);
+                    locationResult = null;
+                }
                 return;
             }
 
             if (gps_loc != null) {
                 locationResult.gotLocation(gps_loc);
+                locationResult = null;
                 return;
             }
             if (net_loc != null) {
                 locationResult.gotLocation(net_loc);
+                locationResult = null;
                 return;
             }
             locationResult.gotLocation(null);
+            locationResult = null;
         }
     }
 

@@ -102,4 +102,11 @@ public interface RetrofitService {
             , @Query("ADDR1") String ADDR1, @Query("ADDR2") String ADDR2,@Part  MultipartBody.Part  FOOD_PIC);
 
 
+    @GET("/mobile/m_my_list")
+    public Call<JsonElement> getMyList(@Query("ID")  String ID);
+
+    @Multipart
+    @POST("/mobile/m_feed_remove")
+    public Call<MsgVO> removeFeed(@PartMap Map<String, RequestBody> params);
+
 }
