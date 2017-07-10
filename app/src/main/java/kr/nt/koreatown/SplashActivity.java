@@ -7,27 +7,30 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
+
+import com.pnikosis.materialishprogress.ProgressWheel;
 
 import java.util.ArrayList;
 
 import kr.lhj.chichapermission.ChichaPermission;
 import kr.lhj.chichapermission.PermissionListener;
+import kr.nt.koreatown.main.BaseActivity;
 import kr.nt.koreatown.main.MainAct;
 import kr.nt.koreatown.util.MyLocation;
 import kr.nt.koreatown.util.Utils;
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends BaseActivity {
 
     private boolean gps = false;
     AlertDialog GpsAlert, Gpsservice;
     MyLocation mlocation = null;
+    ProgressWheel progressWheel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        progressWheel = (ProgressWheel)findViewById(R.id.progress_wheel);
         new ChichaPermission(this).setConfirmMessage("앱을 사용하려면 권한을 승인하셔야 합니다.")
                 .setDeniedMessage("디나인메시지")
                 .setPermissionListener(permissionlistener)
@@ -64,7 +67,9 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mlocation.LocationDestory();
+        if(mlocation != null){
+            mlocation.LocationDestory();
+        }
         locationResult = null;
     }
 
@@ -73,30 +78,30 @@ public class SplashActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
+                progressOn(progressWheel);
                 chkgps();
             }
         }, 1000);
     }
 
-    MyLocation.LocationResult locationResult = new MyLocation.LocationResult() {
+   MyLocation.LocationResult locationResult = new MyLocation.LocationResult() {
         @Override
         public void gotLocation(Location location) {
-            //  String msg = "lon: "+location.getLongitude()+" -- lat: "+location.getLatitude();
-            // Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-            if(location == null){
-                MyLocation location2 = new MyLocation();
-                location2.getLocation(SplashActivity.this,locationResult);
-            }else{
+            if(location != null){
                 KoreaTown.myLocation = location;
-               // mlocation.LocationDestory();
-              //  Intent intent = new Intent(SplashActivity.this,LoginAct.class);
                 if(MainAct.getInstance() == null){
+                    progressOff(progressWheel);
                     Intent intent = new Intent(SplashActivity.this,MainAct.class);
                     startActivity(intent);
                     finish();
                 }
-
             }
+           /* if(location == null){
+                MyLocation location2 = new MyLocation();
+                location2.getLocation(SplashActivity.this,locationResult);
+            }else{
+
+            }*/
         }
     };
 

@@ -42,6 +42,8 @@ public class Common {
     public static final String SEQ = "SEQ";
     public static final String COMMENT = "COMMENT";
 
+    public static final String GUBUN = "GUBUN";
+
     public static final String TYPE_FACEBOOK = "F";
     public static final String TYPE_EMAIL = "E";
     public static final String TYPE_KAKAO = "K";

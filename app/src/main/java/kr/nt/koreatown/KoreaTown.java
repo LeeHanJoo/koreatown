@@ -12,6 +12,7 @@ import com.facebook.appevents.AppEventsLogger;
 import com.kakao.auth.KakaoSDK;
 
 import kr.nt.koreatown.kakao.KakaoSDKAdapter;
+import kr.nt.koreatown.util.WriteFileLog;
 
 /**
  * Created by user on 2017-04-20.
@@ -32,6 +33,7 @@ public class KoreaTown extends Application {
         KakaoSDK.init(new KakaoSDKAdapter());
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
+        WriteFileLog.initialize(this);
     }
 
     @Override
