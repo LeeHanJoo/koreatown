@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_close"
-        android:icon="@drawable/btn_close"
+        android:icon="@drawable/btn_delete"
         android:title="완료"
         android:visible="true"
         app:showAsAction="always" />
