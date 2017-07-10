@@ -77,6 +77,15 @@
                     android:textColor="#ffffff"
                     android:textSize="20sp" />
 
+                <TextView
+                    android:id="@+id/nav_my"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dip"
+                    android:gravity="center"
+                    android:text="내가 작성한글"
+                    android:textColor="#ffffff"
+                    android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/nav_setting"

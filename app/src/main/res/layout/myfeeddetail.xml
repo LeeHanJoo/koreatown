@@ -186,12 +186,7 @@
                                 android:layout_marginTop="10dip">
 
                             </android.support.v7.widget.RecyclerView>
-                            <Button
-                                android:id="@+id/detail_content_cmtbtn"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentBottom="true"
-                                android:text="코멘트등록" />
+
 
                         </LinearLayout>
                     </LinearLayout>
