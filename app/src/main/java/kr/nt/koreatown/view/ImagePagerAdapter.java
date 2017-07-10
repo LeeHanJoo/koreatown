@@ -1,6 +1,7 @@
 package kr.nt.koreatown.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 
 import kr.nt.koreatown.R;
+import kr.nt.koreatown.feed.ImageViewerAct;
 import kr.nt.koreatown.vo.RoomVO;
 
 /**
@@ -47,11 +49,19 @@ public class ImagePagerAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         // TODO Auto-generated method stub
-        RoomVO.Room.FILE item = imageArray.get(position);
+        final RoomVO.Room.FILE item = imageArray.get(position);
         View view = inflater.inflate(R.layout.pager_itemview, null);
         ImageView img= (ImageView)view.findViewById(R.id.pager_item_img);
        // img.setImageResource(R.drawable.icon_menu);
         Glide.with(context).load(item.getURL()).into(img);
+        img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, ImageViewerAct.class);
+                intent.putExtra(ImageViewerAct.ImageURL,item.getURL());
+                context.startActivity(intent);
+            }
+        });
         container.addView(view);
         return view;
     }

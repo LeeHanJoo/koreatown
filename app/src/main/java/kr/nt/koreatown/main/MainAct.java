@@ -742,12 +742,12 @@ public class MainAct extends BaseLogin implements OnMapReadyCallback{
     }
 
     private synchronized void getList(String LAT,String LON){
-        progressOn(binding.includeMain.progressWheel);
+       // progressOn(binding.includeMain.progressWheel);
         Call<JsonElement> call = RetrofitAdapter.getInstance().getMapList(LAT,LON);
         call.enqueue(new Callback<JsonElement>() {
             @Override
             public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
-                progressOff(binding.includeMain.progressWheel);
+              //  progressOff(binding.includeMain.progressWheel);
                 JsonElement json = response.body();
                 if (json != null) {
                     Gson gson = new Gson();
@@ -763,7 +763,7 @@ public class MainAct extends BaseLogin implements OnMapReadyCallback{
             @Override
             public void onFailure(Call<JsonElement> call, Throwable t) {
                 Log.e("","");
-                progressOff(binding.includeMain.progressWheel);
+               // progressOff(binding.includeMain.progressWheel);
                 moveStart = false;
             }
         });

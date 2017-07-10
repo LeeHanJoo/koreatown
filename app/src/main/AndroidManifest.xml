@@ -101,6 +101,11 @@
             android:windowSoftInputMode="stateAlwaysHidden" />
 
         <activity
+            android:name=".feed.ImageViewerAct"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+
+        <activity
             android:name=".feed.CommentPopup"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Dialog" />
