@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -24,6 +23,7 @@ import kr.nt.koreatown.R;
 import kr.nt.koreatown.bus.BusProvider;
 import kr.nt.koreatown.bus.RefreshViewEvent;
 import kr.nt.koreatown.databinding.StoryactBinding;
+import kr.nt.koreatown.main.BaseActivity;
 import kr.nt.koreatown.retrofit.RetrofitAdapter;
 import kr.nt.koreatown.retrofit.RetrofitUtil;
 import kr.nt.koreatown.util.CommonUtil;
@@ -40,7 +40,7 @@ import retrofit2.Callback;
  * Created by user on 2017-04-27.
  */
 
-public class StoryAct extends AppCompatActivity {
+public class StoryAct extends BaseActivity {
 
     private StoryactBinding binding = null;
     private int mSticker = 0;
@@ -124,11 +124,12 @@ public class StoryAct extends AppCompatActivity {
         params.put(Common.LON, RetrofitUtil.toRequestBody(String.valueOf(KoreaTown.myLocation.getLongitude())));
         params.put(Common.ADDR1, RetrofitUtil.toRequestBody(addr1));
         params.put(Common.ADDR2, RetrofitUtil.toRequestBody(addr2));
-
+        progressOn(binding.progressWheel);
         Call<MsgVO> call = RetrofitAdapter.getInstance().postStory(params);
         call.enqueue(new Callback<MsgVO>() {
             @Override
             public void onResponse(Call<MsgVO> call, retrofit2.Response<MsgVO> response) {
+                progressOff(binding.progressWheel);
                 MsgVO item = response.body();
                 if(item != null && item.getResult().equals("1")){
                     BusProvider.getInstance().post(new RefreshViewEvent());
@@ -149,7 +150,7 @@ public class StoryAct extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<MsgVO> call, Throwable t) {
-
+                progressOff(binding.progressWheel);
             }
         });
     }

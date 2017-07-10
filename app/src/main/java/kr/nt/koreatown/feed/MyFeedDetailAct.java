@@ -2,7 +2,6 @@ package kr.nt.koreatown.feed;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -19,24 +19,29 @@ import com.google.gson.JsonElement;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import kr.nt.koreatown.Common;
-import kr.nt.koreatown.KoreaTown;
 import kr.nt.koreatown.R;
 import kr.nt.koreatown.bus.BusProvider;
 import kr.nt.koreatown.bus.RefreshDetailViewEvent;
+import kr.nt.koreatown.bus.RefreshViewEvent;
 import kr.nt.koreatown.databinding.CommentItemBinding;
 import kr.nt.koreatown.databinding.CommentItemStoryBinding;
-import kr.nt.koreatown.databinding.FeeddetailBinding;
-import kr.nt.koreatown.intro.LoginAct;
+import kr.nt.koreatown.databinding.MyfeeddetailBinding;
 import kr.nt.koreatown.main.BaseActivity;
 import kr.nt.koreatown.retrofit.RetrofitAdapter;
+import kr.nt.koreatown.retrofit.RetrofitUtil;
 import kr.nt.koreatown.util.CommonUtil;
+import kr.nt.koreatown.util.SharedManager;
 import kr.nt.koreatown.util.Utils;
 import kr.nt.koreatown.view.ImagePagerAdapter;
 import kr.nt.koreatown.vo.FeedVO;
+import kr.nt.koreatown.vo.MsgVO;
 import kr.nt.koreatown.vo.RoomVO;
 import kr.nt.koreatown.vo.StoryVO;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -45,22 +50,23 @@ import retrofit2.Response;
  * Created by user on 2017-06-07.
  */
 
-public class FeedDetailAct extends BaseActivity {
+public class MyFeedDetailAct extends BaseActivity {
 
-    FeeddetailBinding binding = null;
+    MyfeeddetailBinding binding = null;
     FeedVO.Feed item = null;
+    Menu menu;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = DataBindingUtil.setContentView(this, R.layout.feeddetail);
+        binding = DataBindingUtil.setContentView(this, R.layout.myfeeddetail);
 
         binding.toolbar.setTitle("상세정보");
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        binding.toolbar.setBackgroundColor(Utils.getColor(FeedDetailAct.this,R.color.colorToolbar));
+        binding.toolbar.setBackgroundColor(Utils.getColor(MyFeedDetailAct.this,R.color.colorToolbar));
         item = (FeedVO.Feed)getIntent().getSerializableExtra("feed");
         BusProvider.getInstance().register(this);
         if(item.getGUBUN().equals("R")){
@@ -70,6 +76,17 @@ public class FeedDetailAct extends BaseActivity {
         }
 
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        this.menu = menu;
+        getMenuInflater().inflate(R.menu.delete, menu);
+        //return true;
+        return super.onCreateOptionsMenu(menu);
+
+    }
+
 
     private void getStoryDetail(){
         progressOn(binding.progressWheel);
@@ -162,7 +179,7 @@ public class FeedDetailAct extends BaseActivity {
         binding.detailRoomInfo.setText(storyVO.getData().getST_DESC());
         binding.detailRoomAddr.setText(String.format("%s , %s",storyVO.getData().getST_ADDR1(),storyVO.getData().getST_ADDR2()));
         binding.detailDesc.setText(storyVO.getData().getST_DESC());
-        CommonUtil.setGlideImage(FeedDetailAct.this, Common.BASEFILEURL + storyVO.getData().getMEMBER_ID()+".jpg", binding.profilePhoto);
+        CommonUtil.setGlideImage(MyFeedDetailAct.this, Common.BASEFILEURL + storyVO.getData().getMEMBER_ID()+".jpg", binding.profilePhoto);
 
         setSticker(storyVO.getData().getST_STICKER());
 
@@ -182,32 +199,7 @@ public class FeedDetailAct extends BaseActivity {
             binding.detailContentRecyler.setVisibility(View.GONE);
         }
 
-        binding.detailContentCmtbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!KoreaTown.useLogin){
-                    CommonUtil.showTwoBtnDialog(FeedDetailAct.this, "로그인", "로그인이 필요합니다. 로그인페이지로 이동하시겠습니까?", new CommonUtil.onDialogClick() {
-                        @Override
-                        public void setonConfirm() {
-                            Intent intent = new Intent(FeedDetailAct.this, LoginAct.class);
-                            startActivity(intent);
-                            finish();
-                        }
 
-                        @Override
-                        public void setonCancel() {
-
-                        }
-                    });
-                    return;
-                }
-
-                Intent intent = new Intent(FeedDetailAct.this, CommentPopup.class);
-                intent.putExtra(CommentPopup.GUBUN,"S");
-                intent.putExtra(CommentPopup.SEQ,storyVO.getData().getST_SEQ());
-                startActivity(intent);
-            }
-        });
     }
 
     public void setDetailUI(final RoomVO roomVO){
@@ -217,11 +209,11 @@ public class FeedDetailAct extends BaseActivity {
         binding.detailRoomInfo.setText(String.format("%s room , %s bathroom",roomVO.getData().getRM_ROOM(),roomVO.getData().getRM_TOILET()));
         binding.detailRoomAddr.setText(String.format("%s , %s",roomVO.getData().getRM_ADDR2(),roomVO.getData().getRM_ADDR1()));
         binding.detailDesc.setText(roomVO.getData().getRM_DESC());
-        CommonUtil.setGlideImage(FeedDetailAct.this, Common.BASEFILEURL + roomVO.getData().getMEMBER_ID()+".jpg", binding.profilePhoto);
+        CommonUtil.setGlideImage(MyFeedDetailAct.this, Common.BASEFILEURL + roomVO.getData().getMEMBER_ID()+".jpg", binding.profilePhoto);
         binding.detailSticker.setVisibility(View.GONE);
         if(roomVO.getData().getFILE_LIST() != null && roomVO.getData().getFILE_LIST().size() > 0){
             binding.pager.setVisibility(View.VISIBLE);
-            ImagePagerAdapter adapter = new ImagePagerAdapter(FeedDetailAct.this,getLayoutInflater(),roomVO.getData().getFILE_LIST());
+            ImagePagerAdapter adapter = new ImagePagerAdapter(MyFeedDetailAct.this,getLayoutInflater(),roomVO.getData().getFILE_LIST());
             binding.pager.setPageMargin(getResources().getDisplayMetrics().widthPixels / -5);
             binding.pager.setOffscreenPageLimit(2);
             binding.pager.setAdapter(adapter);
@@ -244,32 +236,6 @@ public class FeedDetailAct extends BaseActivity {
         }else{
             binding.detailContentRecyler.setVisibility(View.GONE);
         }
-
-        binding.detailContentCmtbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!KoreaTown.useLogin){
-                    CommonUtil.showTwoBtnDialog(FeedDetailAct.this, "로그인", "로그인이 필요합니다. 로그인페이지로 이동하시겠습니까?", new CommonUtil.onDialogClick() {
-                        @Override
-                        public void setonConfirm() {
-                            Intent intent = new Intent(FeedDetailAct.this, LoginAct.class);
-                            startActivity(intent);
-                            finish();
-                        }
-
-                        @Override
-                        public void setonCancel() {
-
-                        }
-                    });
-                    return;
-                }
-                Intent intent = new Intent(FeedDetailAct.this, CommentPopup.class);
-                intent.putExtra(CommentPopup.GUBUN,"R");
-                intent.putExtra(CommentPopup.SEQ,roomVO.getData().getRM_SEQ());
-                startActivity(intent);
-            }
-        });
 
     }
 
@@ -373,12 +339,76 @@ public class FeedDetailAct extends BaseActivity {
         }
     }
 
+    public void sendRemove(){
+        progressOn(binding.progressWheel);
+
+        String ID = SharedManager.getInstance().getString(this, Common.ID);
+
+        Map<String, RequestBody> params = new HashMap<String, RequestBody>();
+        params.put(Common.ID, RetrofitUtil.toRequestBody(ID));
+        params.put(Common.GUBUN, RetrofitUtil.toRequestBody(item.getGUBUN()));
+        params.put(Common.SEQ, RetrofitUtil.toRequestBody(String.valueOf(item.getSEQ())));
+
+
+        Call<MsgVO> call2 = RetrofitAdapter.getInstance().removeFeed(params);
+        call2.enqueue(new Callback<MsgVO>() {
+            @Override
+            public void onResponse(Call<MsgVO> call, retrofit2.Response<MsgVO> response) {
+                progressOff(binding.progressWheel);
+                MsgVO item = response.body();
+                if(item != null && item.getResult().equals("1")){
+                    // BusProvider.getInstance().post(new RefreshViewEvent());
+                    CommonUtil.showOnBtnDialog(MyFeedDetailAct.this, "피드삭제", item.getData().getMsg(), new CommonUtil.onDialogClick() {
+                        @Override
+                        public void setonConfirm() {
+                            BusProvider.getInstance().post(new RefreshViewEvent());
+                            finish();
+                        }
+
+                        @Override
+                        public void setonCancel() {
+
+                        }
+                    });
+
+                }else{
+                    CommonUtil.showOnBtnDialog(MyFeedDetailAct.this, "피드삭제", item.getData().getMsg(), null);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MsgVO> call, Throwable t) {
+                t.printStackTrace();
+                progressOff(binding.progressWheel);
+                CommonUtil.showOnBtnDialog(MyFeedDetailAct.this, "피드삭제", getString(R.string.server_err), null);
+            }
+        });
+    }
+
+    public void removeFeed(){
+        CommonUtil.showTwoBtnDialog(this, "피드삭제", "삭제 하시겠습니까?", new CommonUtil.onDialogClick() {
+            @Override
+            public void setonConfirm() {
+                sendRemove();
+            }
+
+            @Override
+            public void setonCancel() {
+
+            }
+        });
+    }
+
     public boolean onOptionsItemSelected(android.view.MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 // NavUtils.navigateUpFromSameTask(this);
                 finish();
                 return true;
+
+            case R.id.action_close:
+                removeFeed();
+                break;
         }
         return super.onOptionsItemSelected(item);
     };

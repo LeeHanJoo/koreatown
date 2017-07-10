@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -33,11 +32,13 @@ import kr.nt.koreatown.R;
 import kr.nt.koreatown.bus.BusProvider;
 import kr.nt.koreatown.bus.RefreshViewEvent;
 import kr.nt.koreatown.databinding.RoomactBinding;
+import kr.nt.koreatown.main.BaseActivity;
 import kr.nt.koreatown.retrofit.RetrofitAdapter;
 import kr.nt.koreatown.retrofit.RetrofitUtil;
 import kr.nt.koreatown.util.CommonUtil;
 import kr.nt.koreatown.util.SharedManager;
 import kr.nt.koreatown.util.Utils;
+import kr.nt.koreatown.util.WriteFileLog;
 import kr.nt.koreatown.vo.MsgVO;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -51,7 +52,7 @@ import retrofit2.Callback;
  * Created by user on 2017-04-27.
  */
 
-public class RoomAct extends AppCompatActivity implements View.OnClickListener{
+public class RoomAct extends BaseActivity implements View.OnClickListener{
 
     private RoomactBinding binding = null;
     private int mRoom = 0 , mBath = 0;
@@ -191,7 +192,27 @@ public class RoomAct extends AppCompatActivity implements View.OnClickListener{
     }
 
     private void AddImage(){
+
         TedBottomPicker bottomSheetDialogFragment = new TedBottomPicker.Builder(RoomAct.this)
+                .setOnMultiImageSelectedListener(new TedBottomPicker.OnMultiImageSelectedListener() {
+                    @Override
+                    public void onImagesSelected(ArrayList<Uri> uriList) {
+                        // here is selected uri list
+                        for(int i = 0 ; i < uriList.size();i++){
+                            setSelectImage(uriList.get(i));
+                        }
+
+                    }
+                })
+                .setPeekHeight(800)
+                .showTitle(false)
+                .setCompleteButtonText("Done")
+                .setEmptySelectionText("No Select")
+                .create();
+
+        bottomSheetDialogFragment.show(getSupportFragmentManager());
+
+      /*  TedBottomPicker bottomSheetDialogFragment = new TedBottomPicker.Builder(RoomAct.this)
                 .setOnImageSelectedListener(new TedBottomPicker.OnImageSelectedListener() {
                     @Override
                     public void onImageSelected(Uri uri) {
@@ -209,68 +230,87 @@ public class RoomAct extends AppCompatActivity implements View.OnClickListener{
 
                     }
                 }).setMaxCount(1000)
-                .create();
+                .create();*/
 
-        bottomSheetDialogFragment.show(getSupportFragmentManager());
+       // bottomSheetDialogFragment.show(getSupportFragmentManager());
 
     }
 
+    private void setSelectImage(Uri uri){
+        ImageView imageview = new ImageView(RoomAct.this);
+        imageview.setScaleType(ImageView.ScaleType.FIT_XY);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(Utils.toPixel(RoomAct.this,80),Utils.toPixel(RoomAct.this,80));
+        params.rightMargin = Utils.toPixel(RoomAct.this,5);
+        imageview.setLayoutParams(params);
+        String path = uri.getPath();
+        fileArr.add(path);
+        Glide.with(RoomAct.this).load("file://" + uri).into(imageview);
+        binding.addimagelayout.addView(imageview,0);
+    }
+
     private void SendStory(String price, String desc,String addr1,String addr2){
-        String ID = SharedManager.getInstance().getString(this, Common.ID);
-        Map<String, RequestBody> params = new HashMap<String, RequestBody>();
-        params.put(Common.ID, RetrofitUtil.toRequestBody(ID));
-        params.put(Common.PRICE, RetrofitUtil.toRequestBody(price));
-        params.put(Common.ROOM, RetrofitUtil.toRequestBody(String.valueOf(mRoom)));
-        params.put(Common.TOILET, RetrofitUtil.toRequestBody(String.valueOf(mBath)));
-        params.put(Common.DESC, RetrofitUtil.toRequestBody(desc));
+        try{
 
-        params.put(Common.LAT, RetrofitUtil.toRequestBody(String.valueOf(KoreaTown.myLocation.getLatitude())));
-        params.put(Common.LON, RetrofitUtil.toRequestBody(String.valueOf(KoreaTown.myLocation.getLongitude())));
-        params.put(Common.ADDR1, RetrofitUtil.toRequestBody(addr1));
-        params.put(Common.ADDR2, RetrofitUtil.toRequestBody(addr2));
-        params.put(Common.COSTDAY, RetrofitUtil.toRequestBody("24"));
+            String ID = SharedManager.getInstance().getString(this, Common.ID);
+            Map<String, RequestBody> params = new HashMap<String, RequestBody>();
+            params.put(Common.ID, RetrofitUtil.toRequestBody(ID));
+            params.put(Common.PRICE, RetrofitUtil.toRequestBody(price));
+            params.put(Common.ROOM, RetrofitUtil.toRequestBody(String.valueOf(mRoom)));
+            params.put(Common.TOILET, RetrofitUtil.toRequestBody(String.valueOf(mBath)));
+            params.put(Common.DESC, RetrofitUtil.toRequestBody(desc));
 
-        List<MultipartBody.Part> photos = new ArrayList<>();
-        if(fileArr.size() > 0){
-            for(int i = 0 ; i < fileArr.size(); i++){
-                File file = new File(fileArr.get(i));
-                MultipartBody.Part body = RetrofitUtil.toRequestMultoPartBody(Common.PIC_ARR,file);
-                photos.add(body);
-            }
-        }
+            params.put(Common.LAT, RetrofitUtil.toRequestBody(String.valueOf(KoreaTown.myLocation.getLatitude())));
+            params.put(Common.LON, RetrofitUtil.toRequestBody(String.valueOf(KoreaTown.myLocation.getLongitude())));
+            params.put(Common.ADDR1, RetrofitUtil.toRequestBody(addr1));
+            params.put(Common.ADDR2, RetrofitUtil.toRequestBody(addr2));
+            params.put(Common.COSTDAY, RetrofitUtil.toRequestBody("24"));
 
-
-        Call<MsgVO> call2 = RetrofitAdapter.getInstance().postRoom(params,photos);
-        call2.enqueue(new Callback<MsgVO>() {
-            @Override
-            public void onResponse(Call<MsgVO> call, retrofit2.Response<MsgVO> response) {
-                MsgVO item = response.body();
-                if(item != null && item.getResult().equals("1")){
-                   // BusProvider.getInstance().post(new RefreshViewEvent());
-                    CommonUtil.showOnBtnDialog(RoomAct.this, "방등록", item.getData().getMsg(), new CommonUtil.onDialogClick() {
-                        @Override
-                        public void setonConfirm() {
-                            BusProvider.getInstance().post(new RefreshViewEvent());
-                            finish();
-                        }
-
-                        @Override
-                        public void setonCancel() {
-
-                        }
-                    });
-
-                }else{
-                    CommonUtil.showOnBtnDialog(RoomAct.this, "방등록", item.getData().getMsg(), null);
+            List<MultipartBody.Part> photos = new ArrayList<>();
+            if(fileArr.size() > 0){
+                for(int i = 0 ; i < fileArr.size(); i++){
+                    File file = new File(fileArr.get(i));
+                    MultipartBody.Part body = RetrofitUtil.toRequestMultoPartBody(Common.PIC_ARR,file);
+                    photos.add(body);
                 }
             }
 
-            @Override
-            public void onFailure(Call<MsgVO> call, Throwable t) {
-                t.printStackTrace();
-                CommonUtil.showOnBtnDialog(RoomAct.this, "방등록", getString(R.string.server_err), null);
-            }
-        });
+            progressOn(binding.progressWheel);
+            Call<MsgVO> call2 = RetrofitAdapter.getInstance().postRoom(params,photos);
+            call2.enqueue(new Callback<MsgVO>() {
+                @Override
+                public void onResponse(Call<MsgVO> call, retrofit2.Response<MsgVO> response) {
+                    progressOff(binding.progressWheel);
+                    MsgVO item = response.body();
+                    if(item != null && item.getResult().equals("1")){
+                        // BusProvider.getInstance().post(new RefreshViewEvent());
+                        CommonUtil.showOnBtnDialog(RoomAct.this, "방등록", item.getData().getMsg(), new CommonUtil.onDialogClick() {
+                            @Override
+                            public void setonConfirm() {
+                                BusProvider.getInstance().post(new RefreshViewEvent());
+                                finish();
+                            }
+
+                            @Override
+                            public void setonCancel() {
+
+                            }
+                        });
+
+                    }else{
+                        CommonUtil.showOnBtnDialog(RoomAct.this, "방등록", item.getData().getMsg(), null);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<MsgVO> call, Throwable t) {
+                    t.printStackTrace();
+                    progressOff(binding.progressWheel);
+                    CommonUtil.showOnBtnDialog(RoomAct.this, "방등록", getString(R.string.server_err), null);
+                }
+            });
+        }catch(Exception e){
+            WriteFileLog.writeException(e);
+        }
     }
 
 
