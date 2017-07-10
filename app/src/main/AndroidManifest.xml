@@ -79,6 +79,11 @@
             android:windowSoftInputMode="stateAlwaysHidden" />
 
         <activity
+            android:name=".feed.MyFeedList"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+
+        <activity
             android:screenOrientation="portrait"
             android:name=".intro.SignComple"
             android:theme="@style/AppTheme.NoActionBar"
@@ -89,6 +94,11 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden" />
 
+
+        <activity
+            android:name=".feed.MyFeedDetailAct"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateAlwaysHidden" />
 
         <activity
             android:name=".feed.CommentPopup"
