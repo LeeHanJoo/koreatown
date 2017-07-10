@@ -33,6 +33,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.GroundOverlay;
 import com.google.android.gms.maps.model.LatLng;
@@ -128,7 +129,7 @@ public class MainAct extends BaseLogin implements OnMapReadyCallback{
         binding.includeMain.toolbar.setNavigationIcon(R.drawable.icon_menu);
         binding.navMap.setOnClickListener(new MyMenuClickListener(this));
         binding.navSetting.setOnClickListener(new MyMenuClickListener(this));
-
+        binding.navMy.setOnClickListener(new MyMenuClickListener(this));
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(map);
         mapFragment.getMapAsync(this);
 
@@ -143,7 +144,10 @@ public class MainAct extends BaseLogin implements OnMapReadyCallback{
             String TYPE = SharedManager.getInstance().getString(this, Common.MEMBER_TYPE);
             doLogin(ID,PASS,TYPE);
         }
+
+
     }
+
 
     @Override
     protected void onResume() {
@@ -195,7 +199,7 @@ public class MainAct extends BaseLogin implements OnMapReadyCallback{
                                         String path = uri.getPath();
                                         updateImage(path);
                                     }
-                                }).setMaxCount(1000)
+                                }).setPreviewMaxCount(100)
                                 .create();
                         bottomSheetDialogFragment.show(getSupportFragmentManager());
                     }
@@ -270,6 +274,13 @@ public class MainAct extends BaseLogin implements OnMapReadyCallback{
 
     private void setUpMap(){
        // gMap.setOnMarkerClickListener(markerClick);
+        gMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+            @Override
+            public boolean onMyLocationButtonClick() {
+
+                return false;
+            }
+        });
        gMap.setOnCameraMoveListener(cameraMoveCallback);
        gMap.setOnMapClickListener(mapClick);
        gMap.setOnCameraMoveCanceledListener(moveCanceledListener);
@@ -629,7 +640,15 @@ public class MainAct extends BaseLogin implements OnMapReadyCallback{
         public void gotLocation(Location location) {
            // String msg = "lon: "+location.getLongitude()+" -- lat: "+location.getLatitude();
            // Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-            if(location == null){
+            if(location != null){
+                if( KoreaTown.myLocation == null){
+                    KoreaTown.myLocation = location;
+                    moveCamera();
+                }else{
+                    KoreaTown.myLocation = location;
+                }
+            }
+           /* if(location == null){
                 MyLocation location2 = new MyLocation();
                 location2.getLocation(MainAct.this,locationResult);
             }else{
@@ -637,11 +656,18 @@ public class MainAct extends BaseLogin implements OnMapReadyCallback{
                 String LAT = String.valueOf(KoreaTown.myLocation.getLatitude());
                 String LON = String.valueOf(KoreaTown.myLocation.getLongitude());
                 getList(LAT,LON);
-                //drawMarker(location);
-            }
+            }*/
         }
     };
 
+    private void moveCamera(){
+        String LAT = String.valueOf(KoreaTown.myLocation.getLatitude());
+        String LON = String.valueOf(KoreaTown.myLocation.getLongitude());
+        LatLng latlng = new LatLng(KoreaTown.myLocation.getLatitude(),KoreaTown.myLocation.getLongitude());
+        CameraUpdate cu = CameraUpdateFactory.newLatLngZoom(latlng, (float)13.0);
+        gMap.moveCamera(cu);
+        getList(LAT,LON);
+    }
 
     private void drawMarker(FeedVO.Feed item){
         double lat = Double.valueOf(item.getLAT());
@@ -687,31 +713,41 @@ public class MainAct extends BaseLogin implements OnMapReadyCallback{
             mcr.setClusterView(LayoutInflater.from(this).inflate(R.layout.cluster, null));
             gMap.setOnCameraIdleListener(mClsterMa);
             gMap.setOnMarkerClickListener(mClsterMa);
+            gMap.setMyLocationEnabled(true);
+            gMap.setIndoorEnabled(true);
+            gMap.setBuildingsEnabled(true);
+            gMap.setTrafficEnabled(true);
+            UiSettings set = gMap.getUiSettings();
+            set.setCompassEnabled(true);
+            gMap.getUiSettings().setRotateGesturesEnabled(true);
             mClsterMa.setRenderer(mcr);
             setUpMap();
         }
 
 
-        if(KoreaTown.myLocation == null){
+      /*  if(KoreaTown.myLocation == null){
             MyLocation location = new MyLocation();
             location.getLocation(MainAct.this,locationResult);
-        }else{
+        }else{*/
             //drawMarker(KoreaTown.myLocation);
-
+            MyLocation location = new MyLocation();
+            location.getLocation(MainAct.this,locationResult);
             String LAT = String.valueOf(KoreaTown.myLocation.getLatitude());
             String LON = String.valueOf(KoreaTown.myLocation.getLongitude());
             LatLng latlng = new LatLng(KoreaTown.myLocation.getLatitude(),KoreaTown.myLocation.getLongitude());
             CameraUpdate cu = CameraUpdateFactory.newLatLngZoom(latlng, (float)13.0);
             gMap.moveCamera(cu);
             getList(LAT,LON);
-        }
+      //  }
     }
 
     private synchronized void getList(String LAT,String LON){
+        progressOn(binding.includeMain.progressWheel);
         Call<JsonElement> call = RetrofitAdapter.getInstance().getMapList(LAT,LON);
         call.enqueue(new Callback<JsonElement>() {
             @Override
             public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+                progressOff(binding.includeMain.progressWheel);
                 JsonElement json = response.body();
                 if (json != null) {
                     Gson gson = new Gson();
@@ -727,12 +763,14 @@ public class MainAct extends BaseLogin implements OnMapReadyCallback{
             @Override
             public void onFailure(Call<JsonElement> call, Throwable t) {
                 Log.e("","");
+                progressOff(binding.includeMain.progressWheel);
                 moveStart = false;
             }
         });
     }
 
     private void setUI(FeedVO item){
+
         if(item == null ) return;
         gMap.clear();
         mClsterMa.clearItems();

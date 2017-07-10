@@ -55,7 +55,7 @@ public class FeedList extends AppCompatActivity {
         LinearLayoutManager manager = new LinearLayoutManager(this);
         binding.recylerview.setHasFixedSize(true);
         binding.recylerview.setLayoutManager(manager);
-        binding.recylerview.setAdapter(new RecyclerAdapter(this, arraylist, R.layout.mainact));
+        binding.recylerview.setAdapter(new RecyclerAdapter(this, arraylist, R.layout.feedlist));
 
         binding.itemCnt.setText(String.valueOf(arraylist.size()));
 

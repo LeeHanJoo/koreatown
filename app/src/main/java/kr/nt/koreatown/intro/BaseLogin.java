@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -28,6 +29,7 @@ import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.exception.KakaoException;
+import com.pnikosis.materialishprogress.ProgressWheel;
 
 import org.json.JSONObject;
 
@@ -93,6 +95,14 @@ public class BaseLogin extends AppCompatActivity {
         accessToken = AccessToken.getCurrentAccessToken();
         accessTokenTracker.startTracking();
 
+    }
+
+    public void progressOn(ProgressWheel view){
+        view.setVisibility(View.VISIBLE);
+    }
+
+    public void progressOff(ProgressWheel view){
+        view.setVisibility(View.GONE);
     }
 
     public void isKakaoLogin() {
