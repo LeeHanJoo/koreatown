@@ -96,12 +96,7 @@ public class SplashActivity extends BaseActivity {
                     finish();
                 }
             }
-           /* if(location == null){
-                MyLocation location2 = new MyLocation();
-                location2.getLocation(SplashActivity.this,locationResult);
-            }else{
 
-            }*/
         }
     };
 

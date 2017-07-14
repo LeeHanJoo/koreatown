@@ -101,7 +101,7 @@ public class Utils {
      * @return
      */
     public static boolean ChkGps(Context context) {
-        String gs = android.provider.Settings.Secure.getString(context.getContentResolver(),android.provider.Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+        String gs = android.provider.Settings.Secure.getString(context.getContentResolver(), Settings.Secure.LOCATION_MODE);
         if (gs.indexOf("gps", 0) < 0 && gs.indexOf("network", 0) < 0) {
             return false;
         } else {

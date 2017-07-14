@@ -747,7 +747,7 @@ public class MainAct extends BaseLogin implements OnMapReadyCallback{
         call.enqueue(new Callback<JsonElement>() {
             @Override
             public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
-              //  progressOff(binding.includeMain.progressWheel);
+              //  progressOff(biRnding.includeMain.progressWheel);
                 JsonElement json = response.body();
                 if (json != null) {
                     Gson gson = new Gson();
